@@ -1,0 +1,5 @@
+{
+  "name": "muni-training-evidence", "main": "src/index.ts", "compatibility_date": "2026-10-01",
+  "assets": {"directory": "public", "binding": "ASSETS"},
+  "d1_databases": [{"binding": "DB", "database_name": "muni-training-evidence", "database_id": "fd78c4db-8bb2-4f92-8bcb-6fbcff467c4b", "migrations_dir": "migrations"}]
+}

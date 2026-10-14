@@ -74,3 +74,12 @@ Pravidlo: zaznamenáváme významná rozhodnutí, důvody, ověření a oponentu
 - Ověření mimo sandbox se schválením: git ls-remote origin HEAD úspěšné, gh auth status potvrzuje účet Mooore, gh repo view potvrzuje soukromý repozitář Mooore/muni-training-evidence. Předchozí síťová překážka není aktuální.
 - Plán označen za schválený; původní návrhové formulace a předpoklady uvnitř dokumentu zůstávají dohledatelné.
 - Přečten a vyhodnocen skill sites:sites; zatím nebyla vytvořena Site ani ověřen deployment.
+
+### Základ aplikace a hosting (09:08)
+
+- Commit dokumentace 63776ce úspěšně pushnut na GitHub.
+- Vytvořen Hono/Workers scaffold, TypeScript, SCSS, Vitest a CI. První health test a produkční dry-run build prošly. Build vyžadoval oprávnění zápisu lokálních logů Wrangleru; ověřeno mimo sandbox se schválením.
+- Oprava AI: původně zvolená datovaná verze Workers types neexistovala. Ověřena skutečná verze npm. Audit nalezl problémy ve starších dev závislostech Vitest a csv-parse; aktualizovány, npm uvádí 0 zranitelností.
+- Uživatel dokončil Cloudflare OAuth. CLI potvrzuje přihlášení; vytvořena vyhrazená D1 databáze muni-training-evidence. Zatím není nasazená aplikace.
+- Sites vyhodnocen, pro schválený stack používáme přímo Cloudflare účet a Wrangler; nevytváříme další Site ani kopii repozitáře.
+- Uživatel poskytl cesty originálů v Downloads. Zůstávají mimo Git; generovaný seed obsahuje pouze povolená doménová pole. Import a doména rozpracované.
