@@ -1,6 +1,6 @@
 # Stav realizace
 
-Poslední aktualizace: 2026-10-14 10:28 Europe/Prague.
+Poslední aktualizace: 2026-10-14 10:34 Europe/Prague.
 
 ## Čas
 
@@ -28,9 +28,9 @@ Termín 12:20 Europe/Prague. V 09:44 bylo hotovo s rezervou 156 minut do termín
 
 ## Ověření a otevřené hranice
 
-26 unit/integration testů prošlo, typecheck prošel. Čtyři prohlížečové průchody prošly lokálně i na veřejné revizi po uživatelské oponentuře. Čistá kopie: instalace, migrace, seed, tehdejších 20 testů, build i skutečné HTTP spuštění prošly. Dataset rollback nacvičen lokálně. GitHub CI aplikačního commitu e831be3 úspěšné včetně browser testů.
+29 unit/integration testů prošlo, typecheck prošel. Pět prohlížečových průchodů prošlo lokálně i na veřejné verzi zjednodušeného přehledu. Čistá kopie: instalace, migrace, seed, tehdejších 20 testů, build i skutečné HTTP spuštění prošly. Dataset rollback nacvičen lokálně. GitHub CI aplikačního commitu 4266f2b úspěšné včetně browser testů.
 
-Veřejně ověřená aktuální aplikační revize e831be3, dataset 239aef0a043c4b76, Cloudflare version 1b667c2c-0d83-464e-87f8-93630bc1d0e4. Následný dokumentační commit nemění běžící kód. Všechny implementační milníky byly commitnuty a pushnuty. Poslední HTTP smoke po oponentuře: návrh medián/p95 celého přenosu 77/114,2 ms; přehled 96/507,7 ms (server p95 302 ms); malý vzorek.
+Veřejně ověřená aktuální aplikační revize 4266f2b, dataset 239aef0a043c4b76, Cloudflare version a9cff5a8-dff0-4012-a28b-ecd2fd05c3ac. Následný dokumentační commit nemění běžící kód. Všechny implementační milníky byly commitnuty a pushnuty. Poslední HTTP smoke: přehled medián/p95 celého přenosu 96,6/237,9 ms (server p95 90 ms); návrh 88,5/703,6 ms (server p95 25 ms). Malý vzorek zahrnuje síť; výsledek není SLA.
 
 Výkonové cíle interakcí splněny v omezeném měření. CPU studeného auditu a některých požadavků překračuje 10 ms Free limit; vhodnost všech cest pro Workers Free není potvrzena. Aktuální hosting neměl runtime chyby, konkrétní billing tarif nelze s oprávněním ověřit (403); žádný tarif nebyl změněn. Nejde o produkční SLA.
 
@@ -40,6 +40,6 @@ Vědomě vynecháno dle plánu: SSO/role, CRUD, skutečné rezervace, notifikace
 
 Nasazená a ověřená úprava srozumitelnosti: celé názvy školení, konkrétní pořadí a důvod termínu, vysvětlení „K ověření“ a odkazy na podklady. Pravidlo priority se nemění. Porovnání na třech datech zachovalo výsledky. 26 testů, build, 4 lokální i veřejné E2E a CI prošly. Na třech datech byla ověřena shoda rozhodnutí s předchozí verzí.
 
-## Schválené zjednodušení přehledu (10:28)
+## Schválené zjednodušení přehledu (hotovo 10:34)
 
-Lokálně implementován graf splnění, konkrétní úkoly, rozbalovací podrobnosti a pokročilé filtry, stručnější úvod plánovače. 29 testů, build a 5 E2E prošly; dokončují se textové detaily, nová veřejná revize ještě čeká.
+Nasazen graf splnění s unikátními osobami (90/153), konkrétní úkoly, rozbalovací podrobnosti a pokročilé filtry, stručnější úvod plánovače. 29 testů, build, 5 lokálních i veřejných E2E a CI úspěšné. Úkoly zachovávají výběr při přechodu do seznamu; upravené pokročilé filtry se automaticky otevřou. Přiřazovací algoritmus se nemění.

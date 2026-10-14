@@ -65,3 +65,21 @@ Stejná metodika omezeného HTTP smoke (12 sekvenčních požadavků na cestu, p
 | `/quality?level=warning` | 65.8 | 109.8 | 28.0 | 8759 |
 
 Desktopový obsah přehledu viditelný za 260 ms, simulovaný mobil LCP 364 ms při stejných podmínkách jako výše. Jeden vzorek na režim; nejde o SLA. Serverové p95 v tomto měření do 500 ms, u přehledu jeden celkový přenos 507,7 ms (samotný server 302 ms). Dřívější CPU/Free omezení nadále platí; nové měření CPU nebylo provedeno.
+
+## Zjednodušený přehled — 10:34
+
+Aktuální aplikace 4266f2b, Cloudflare version a9cff5a8-dff0-4012-a28b-ecd2fd05c3ac, stejný dataset. Graf obsahuje dvě disjunktní skupiny osob: 90/153 aktuálně splněno, 63 řešit nebo ověřit. Úkoly mají překrývající se osoby; odlišení je uvedeno v UI. Prázdný výběr nemá graf a netvrdí splnění.
+
+29 unit/integration testů, typecheck, build a 5 lokálních i veřejných E2E úspěšné. Nové testy pokrývají agregaci unikátních osob, překryv pracovních úkolů, nejisté a nepovinné požadavky, přesný snapshot, odkazy úkolů a zachování útvaru, rozbalení aktivních filtrů a prázdný výběr. Vizuálně zkontrolován desktop i mobil. Graf používá nativní HTML progress bez JS/knihovny a má přístupný název i textovou legendu. [CI aplikačního commitu úspěšné](https://github.com/Mooore/muni-training-evidence/actions/runs/38535706839).
+
+Stejný omezený HTTP smoke (12 sekvenčních požadavků/cestu, první odděleně):
+
+| Cesta | Medián celkem ms | p95 celkem ms | p95 server app ms |
+| --- | ---: | ---: | ---: |
+| `/` | 96.6 | 237.9 | 90.0 |
+| `/?department=Laborato%C5%99e` | 75.5 | 263.2 | 97.0 |
+| `/employees/E0001` | 80.3 | 230.2 | 92.0 |
+| `/planning` | 88.5 | 703.6 | 25.0 |
+| `/quality?level=warning` | 72.1 | 162.6 | 102.0 |
+
+Veřejný desktopový obsah přehledu viditelný za 298 ms; simulovaný mobil LCP 380 ms při stejných podmínkách jako dříve. Jeden vzorek na režim. P95 přenosu návrhu 703,6 ms zahrnuje síť; jeho serverové p95 bylo 25 ms. Žádná chyba HTTP během smoke. Dosavadní CPU/Free omezení nadále platí; nové CPU měření se neprovádělo.

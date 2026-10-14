@@ -163,3 +163,10 @@ Pravidlo: zaznamenáváme významná rozhodnutí, důvody, ověření a oponentu
 - 29 testů, typecheck, build a 5 lokálních E2E prošly. Nové testy ověřují unikátní osoby proti překryvům úkolů, nejisté/nepovinné povinnosti, skutečný snapshot, odkazy a zachování filtrů i prázdný výběr. Vizuálně zkontrolován desktop a mobil. Před publikací ještě dolaďujeme text vybraného rozsahu a skloňování počtů.
 
 - Dokončení lokálního ověření (10:30): popis vybraného rozsahu nad grafem a skloňování počtů doplněny; typecheck, 29 testů, build a 5 E2E úspěšné. Lokální browser timing 108 ms do viditelného obsahu, simulovaný mobil LCP 356 ms (jednotlivé vzorky, nikoli SLA). Připraveno ke commitu a veřejnému ověření.
+
+### Veřejné ověření zjednodušeného přehledu (10:34)
+
+- Commit 4266f2b pushnut a nasazen jako Cloudflare version a9cff5a8-dff0-4012-a28b-ecd2fd05c3ac. Deployment gate a obsahový smoke úspěšné; připraven návrat k předchozí ověřené verzi, nebyl potřeba.
+- Všech 5 veřejných E2E a GitHub Actions run 38535706839 completed/success. Ověřeny skutečné hodnoty grafu, odkazy úkolů, zachování výběru, viditelnost aktivních filtrů i rozbalení podrobné priority plánovače.
+- Přehled HTTP medián/p95 96,6/237,9 ms (server p95 90 ms), plán 88,5/703,6 ms (server p95 25 ms). Desktop obsah 298 ms, simulovaný mobil LCP 380 ms. Malé vzorky a podmínky popsány ve VERIFICATION; nezaměňují se síť a CPU/server.
+- Závěrečná dokumentace zachycuje schválení a ověření; běžící revize zůstává 4266f2b.
