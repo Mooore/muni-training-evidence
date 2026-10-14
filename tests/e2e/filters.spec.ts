@@ -1,0 +1,155 @@
+import {test,expect,type Page} from '@playwright/test';
+import {readFileSync} from 'node:fs';
+import type {Dataset,State} from '../../src/domain/types';
+import {eligibility,overview} from '../../src/domain/evidence';
+
+// Oracle uses the imported snapshot and tested domain rules, never the view's
+// filter implementation. Compare identities, not just a heading or one row.
+const data=JSON.parse(readFileSync('data/demo.json','utf8')) as Dataset;
+const reference=data.meta.reference;
+const states:State[]=['valid','expiring','expired','missing','uncertain'];
+type Selection={date?:string;scope?:string;department?:string;q?:string;state?:State|''};
+function expectedIds(f:Selection){
+ const date=f.date??reference,obligations=overview(data,date);
+ return data.employees.filter(e=>
+  (!f.department||e.department===f.department)&&
+  (!f.q||`${e.name} ${e.id}`.toLocaleLowerCase('cs').includes(f.q.toLocaleLowerCase('cs')))&&
+  ((f.scope??'active')==='all'||eligibility(e,date)===(f.scope??'active'))&&
+  (!f.state||obligations.some(o=>o.employee.id===e.id&&o.required!==false&&o.state===f.state))
+ ).map(e=>e.id);
+}
+async function submit(page:Page,f:Selection){
+ const form=page.getByRole('form',{name:'Filtry zaměstnanců'});
+ if(!await form.locator('details').evaluate(el=>(el as HTMLDetailsElement).open))await form.locator('summary').click();
+ await form.getByLabel('Zaměstnanec',{exact:true}).fill(f.q??'');
+ await form.getByRole('combobox',{name:'Útvar',exact:true}).selectOption(f.department??'');
+ await form.getByLabel('Referenční datum',{exact:true}).fill(f.date??reference);
+ await form.getByRole('combobox',{name:'Způsobilost',exact:true}).selectOption(f.scope??'active');
+ await form.getByRole('combobox',{name:'Stav povinnosti',exact:true}).selectOption(f.state??'');
+ await form.getByRole('button',{name:'Filtrovat',exact:true}).click();
+}
+async function assertEmployees(page:Page,ids:string[],offset=0){
+ const rows=page.locator('.employees-table tbody tr');
+ expect(await rows.locator('th small').allTextContents()).toEqual(ids.slice(offset,offset+20));
+ await expect(page.locator('#employees')).toContainText(`Zaměstnanci ${ids.length}`);
+ if(!ids.length)await expect(page.getByText('Žádný zaměstnanec neodpovídá filtrům.',{exact:true})).toBeVisible();
+}
+
+test('every department and eligibility option submits the exact expected employees',async({page})=>{
+ await page.goto('/');
+ for(const department of [...new Set(data.employees.map(e=>e.department))].filter(Boolean)){
+  const f={department,scope:'all'};await submit(page,f);await assertEmployees(page,expectedIds(f));
+  await expect(page.getByRole('combobox',{name:'Útvar',exact:true})).toHaveValue(department);
+ }
+ for(const scope of ['active','all','parental','future','ended','uncertain']){
+  const f={scope};await submit(page,f);await assertEmployees(page,expectedIds(f));
+  if(scope==='active'){await expect(page.getByRole('combobox',{name:'Způsobilost',exact:true})).toBeHidden();await page.getByText('Další filtry',{exact:true}).click();}
+  await expect(page.getByRole('combobox',{name:'Způsobilost',exact:true})).toHaveValue(scope);
+ }
+});
+
+test('all obligation states filter people and do not change the selected population graph',async({page})=>{
+ await page.goto('/');
+ const progress=page.getByRole('progressbar');const value=await progress.getAttribute('value'),max=await progress.getAttribute('max');
+ for(const state of states){
+  const f={state};await submit(page,f);await assertEmployees(page,expectedIds(f));
+  await expect(page.getByRole('combobox',{name:'Stav povinnosti',exact:true})).toHaveValue(state);
+  await expect(progress).toHaveAttribute('value',value!);await expect(progress).toHaveAttribute('max',max!);
+ }
+});
+
+test('name/ID search is case insensitive, combines with other filters and treats special characters literally',async({page})=>{
+ await page.goto('/');
+ for(const f of [
+  {q:'e0020',scope:'all'},
+  {q:'LUCIE',scope:'all'},
+  {q:'OVÁ',department:'Laboratoře',scope:'active',state:'missing' as const},
+  {q:'E0001',department:'Laboratoře',scope:'all'},
+  {q:'<script>alert(1)</script>',scope:'all'},
+  {q:"%' OR 1=1 --",scope:'all'}
+ ]){
+  await submit(page,f);await assertEmployees(page,expectedIds(f));
+  await expect(page.getByLabel('Zaměstnanec',{exact:true})).toHaveValue(f.q);
+  expect(new URL(page.url()).searchParams.get('q')).toBe(f.q);
+ }
+});
+
+test('combined filters and reference date persist through paging, detail/back and reset',async({page})=>{
+ const f={q:'E0',scope:'all',state:'valid' as const,date:'2026-09-01'};
+ const ids=expectedIds(f);expect(ids.length).toBeGreaterThan(20);
+ await page.goto('/');await submit(page,f);await assertEmployees(page,ids);
+ await page.getByRole('link',{name:'Další →',exact:true}).click();await assertEmployees(page,ids,20);
+ for(const [key,value] of Object.entries(f))expect(new URL(page.url()).searchParams.get(key)).toBe(value);
+ await page.locator('.employees-table tbody th a').first().click();
+ expect(new URL(page.url()).searchParams.get('date')).toBe(f.date);
+ await page.goBack();await assertEmployees(page,ids,20);
+ // Submitting a changed filter must start from page 1, not keep the old offset.
+ await submit(page,{...f,q:'e0020',state:''});await assertEmployees(page,expectedIds({...f,q:'e0020',state:''}));
+ expect(new URL(page.url()).searchParams.has('page')).toBe(false);
+ await page.getByRole('link',{name:'Zrušit filtry',exact:true}).click();
+ await assertEmployees(page,expectedIds({date:f.date}));
+ await expect(page.getByLabel('Zaměstnanec',{exact:true})).toHaveValue('');
+ await expect(page.getByRole('combobox',{name:'Útvar',exact:true})).toHaveValue('');
+ await expect(page.getByRole('combobox',{name:'Způsobilost',exact:true})).toHaveValue('active');
+ await expect(page.getByRole('combobox',{name:'Stav povinnosti',exact:true})).toHaveValue('');
+ await expect(page.getByLabel('Referenční datum',{exact:true})).toHaveValue(f.date);
+});
+
+test('overview pages have no omissions/duplicates, preserve filters and clamp a stale page',async({page})=>{
+ const f={scope:'all',q:'e0',date:reference},ids=expectedIds(f),seen:string[]=[];
+ await page.goto('/?'+new URLSearchParams(f));
+ for(let offset=0;offset<ids.length;offset+=20){
+  await assertEmployees(page,ids,offset);seen.push(...await page.locator('.employees-table tbody th small').allTextContents());
+  if(offset+20<ids.length)await page.getByRole('link',{name:'Další →',exact:true}).click();
+ }
+ expect(seen).toEqual(ids);expect(new Set(seen).size).toBe(ids.length);
+ await expect(page.getByRole('link',{name:'Další →',exact:true})).toHaveCount(0);
+ await page.goto('/?'+new URLSearchParams({...f,page:'9999'}));
+ await assertEmployees(page,ids,Math.floor((ids.length-1)/20)*20);
+ await page.getByRole('link',{name:'← Předchozí',exact:true}).click();
+ for(const [key,value] of Object.entries(f))expect(new URL(page.url()).searchParams.get(key)).toBe(value);
+});
+
+test('audit combines every event type with literal case insensitive ID search and resets pagination',async({page})=>{
+ await page.goto('/quality?page=2&date=2026-09-01');
+ for(const level of ['','repair','warning','reject']){
+  const q='e00',matches=data.audit.filter(a=>a.id.toLowerCase().includes(q)&&(!level||a.level===level));
+  await page.getByLabel('Zdrojové ID',{exact:true}).fill(q);
+  await page.getByRole('combobox',{name:'Typ události',exact:true}).selectOption(level);
+  await page.getByRole('button',{name:'Filtrovat audit'}).click();
+  await expect(page.getByText(`Nalezeno ${matches.length} událostí.`,{exact:true})).toBeVisible();
+  expect(new URL(page.url()).searchParams.has('page')).toBe(false);
+  expect(new URL(page.url()).searchParams.get('date')).toBe('2026-09-01');
+  const rows=page.locator('tbody tr');
+  expect(await rows.locator('th').allTextContents()).toEqual(matches.slice(0,30).map(a=>a.id||'Bez ID'));
+  expect(await rows.locator('td:nth-child(3)').allTextContents()).toEqual(matches.slice(0,30).map(a=>({repair:'Oprava',warning:'Upozornění',reject:'Odmítnutí'})[a.level]));
+  if(matches.length>30){
+   await page.getByRole('link',{name:'Další →',exact:true}).click();
+   expect(await rows.locator('th').allTextContents()).toEqual(matches.slice(30,60).map(a=>a.id||'Bez ID'));
+   await expect(page.getByLabel('Zdrojové ID',{exact:true})).toHaveValue(q);
+   await expect(page.getByRole('combobox',{name:'Typ události',exact:true})).toHaveValue(level);
+  }
+ }
+});
+
+test('invalid filter URLs are rejected instead of silently showing unrelated results',async({page})=>{
+ for(const path of ['/?scope=invalid','/?state=invalid','/?department=neexistuje','/?page=0','/?page=-1','/?page=1.5','/?date=2026-02-30','/?date=1949-12-31','/?q='+('x'.repeat(101)),'/quality?level=invalid','/quality?page=0']){
+  const response=await page.goto(path);expect(response?.status(),path).toBe(400);
+  await expect(page.locator('.employees-table')).toHaveCount(0);
+ }
+});
+
+
+test('mobile filters submit with Enter and preserve a combined selection after reload',async({page})=>{
+ await page.setViewportSize({width:390,height:844});await page.goto('/');
+ const f={department:'Laboratoře',scope:'all',state:'expired' as const};
+ await submit(page,f);await assertEmployees(page,expectedIds(f));
+ const q='E0';await page.getByLabel('Zaměstnanec',{exact:true}).fill(q);
+ await page.getByLabel('Zaměstnanec',{exact:true}).press('Enter');
+ await expect(page).toHaveURL(/q=E0/);await assertEmployees(page,expectedIds({...f,q}));
+ await page.reload();await assertEmployees(page,expectedIds({...f,q}));
+ await expect(page.getByRole('combobox',{name:'Útvar',exact:true})).toHaveValue(f.department);
+ await expect(page.getByRole('combobox',{name:'Způsobilost',exact:true})).toHaveValue(f.scope);
+ await expect(page.getByRole('combobox',{name:'Stav povinnosti',exact:true})).toHaveValue(f.state);
+ expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);
+});

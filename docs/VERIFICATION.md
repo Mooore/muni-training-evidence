@@ -127,3 +127,12 @@ Runtime tail zachytil 32 událostí nové verze během smoke a E2E, všechny `ou
 Veřejný desktopový obsah viditelný za 315 ms, simulovaný mobil LCP 372 ms, stejné podmínky jako výše a jeden vzorek na režim.
 
 Přejímka: README odpovídá aktuálním příkazům a migracím; čisté spuštění poslední revize ověřilo CI. Stručné odevzdání obsahuje veřejné odkazy, rozsah, doménová rozhodnutí, způsob spuštění, ověření a produkční výluky. Originální CSV a lokální zálohy zůstávají mimo Git. Dataset ani pravidla přiřazení tato úprava nemění. Automatická chybová větev návratu kódu nebyla veřejně vyvolána; dříve nacvičený lokální návrat datasetu zůstává doložen výše. MVP připraveno k odevzdání před termínem 12:20.
+
+
+## Dodatečná přejímka FE filtrů (11:23)
+
+Přidáno osm E2E scénářů v `tests/e2e/filters.spec.ts`, celkem nyní 15 browser testů. Přesná ID osob a počty se porovnávají proti snapshotu a doménovým pravidlům, bez volání filtrační funkce view. Pokryto všech devět útvarů, šest způsobilostí, pět stavů, jméno/ID/case/diakritika, průniky, prázdné výsledky, všechny stránky seznamu bez duplicit/vynechání, zastaralá stránka, datum, zachování/reset filtrů a detail/zpět. Audit má kontrolu průniku ID/úrovně včetně přesných řádků a počtů. Mobilní test používá Enter, kombinovaný výběr a reload. Neplatné hodnoty v URL vrací 400, speciální HTML/SQL znaky jsou literální hledání.
+
+V tomto rozsahu se aplikační chyba neprokázala. Výslovně chráněno stávající chování: stav povinnosti omezuje seznam, graf respektuje populaci před tímto filtrem; reset zachovává datum. Nejde o exhaustivní test všech kartézských kombinací všech hodnot. Kontrola 32 unit/integration testů, typů a buildu úspěšná, celá sada 15 lokálních E2E úspěšná. Běžící aplikační revize a dataset beze změny.
+
+Všech 15 veřejných E2E rovněž úspěšných (25,1 s). Orientačně desktop obsah 404 ms, simulovaný mobil LCP 376 ms za dosavadních podmínek, jednotlivé vzorky. Změna přidává testy/dokumentaci a nevyžaduje nové nasazení běhového kódu.

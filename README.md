@@ -28,7 +28,7 @@ npm run smoke -- http://localhost:8787
 npx tsx scripts/verify/domain.ts
 ```
 
-Na macOS E2E standardně používají instalovaný Google Chrome; v CI používají Chromium instalované Playwrightem. Pro jiný systém použít `CI=1`. Jestli server již běží lokálně, spustit `npm run test:e2e` bez `CI=1`, nebo zadat `BASE_URL=http://localhost:8787`. GitHub CI provádí také čistou migraci, seed a prohlížečový průchod.
+Na macOS E2E standardně používají instalovaný Google Chrome; v CI používají Chromium instalované Playwrightem. Pro jiný systém použít `CI=1`. Jestli server již běží lokálně, spustit `npm run test:e2e` bez `CI=1`, nebo zadat `BASE_URL=http://localhost:8787`. GitHub CI provádí také čistou migraci, seed a prohlížečové průchody. Samostatná sada `tests/e2e/filters.spec.ts` ověřuje přesná ID a počty pro útvary, způsobilosti, stavy, kombinace hledání, stránkování, reset, datum, audit i mobilní odeslání Enterem.
 
 ## Co aplikace řeší
 

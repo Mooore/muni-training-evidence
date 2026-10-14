@@ -1,6 +1,6 @@
 # Stav realizace
 
-Poslední aktualizace: 2026-10-14 11:15 Europe/Prague.
+Poslední aktualizace: 2026-10-14 11:23 Europe/Prague.
 
 ## Čas
 
@@ -28,7 +28,7 @@ Termín 12:20 Europe/Prague. V 09:44 bylo hotovo s rezervou 156 minut do termín
 
 ## Ověření a otevřené hranice
 
-32 unit/integration testů, typecheck a build prošly. Sedm prohlížečových průchodů prošlo lokálně i veřejně. GitHub CI poslední aplikační revize úspěšné včetně čisté instalace, migrací, seedu a E2E. Dřívější nezávislé lokální spuštění čistého exportu i návrat datasetu jsou doloženy ve VERIFICATION.
+32 unit/integration testů, typecheck a build prošly. Patnáct prohlížečových průchodů prošlo lokálně i veřejně, včetně osmi nových scénářů přesné korektnosti filtrů. GitHub CI poslední aplikační revize úspěšné včetně čisté instalace, migrací, seedu a E2E. Dřívější nezávislé lokální spuštění čistého exportu i návrat datasetu jsou doloženy ve VERIFICATION.
 
 Veřejně ověřená aplikační revize fb600f5, dataset 8329fc51214bfc0b, Cloudflare version 8e826edf-e3ea-47d9-b857-713b2fe4d4a4. Následný dokumentační commit nemění běžící kód. Poslední HTTP smoke: audit medián/p95 155,5/198,1 ms; přehled 89,9/131,4 ms; návrh 90,2/102,9 ms. Vzorek zahrnuje síť a není SLA.
 
@@ -51,3 +51,7 @@ Veřejně ověřena auditovaná oprava šesti běžných křestních jmen včetn
 ## SQL audit a přejímka (hotovo 11:15)
 
 Audit filtruje a stránkuje v SQL, přenáší nejvýše 30 událostí a malé agregace. Health neparsuje celý dataset. Index aplikován lokálně i vzdáleně, nasazení a veřejný smoke úspěšné. 32 testů, build, 7 lokálních i veřejných E2E a CI úspěšné. README a stručné odevzdání zkontrolovány, výsledky i zbývající CPU omezení zapsány. Schválený rozsah této iterace dokončen.
+
+## Double-check FE filtrů (hotovo 11:23)
+
+Osm nových scénářů chrání konkrétní ID/počty, všechny volby útvarů/způsobilostí/stavů, průniky, hledání, audit, celé stránkování, datum, reset, neplatné URL a mobilní Enter/reload. V ověřeném rozsahu nebyla nalezena chyba aplikace. 32 unit/integration a celkem 15 lokálních i veřejných E2E úspěšných. Běžící revize fb600f5 beze změny; nový commit obsahuje testy a dokumentaci.
