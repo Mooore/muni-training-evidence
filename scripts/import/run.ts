@@ -1,0 +1,21 @@
+import { readFile,writeFile,mkdir } from 'node:fs/promises';
+import { resolve,join } from 'node:path';
+import { createHash } from 'node:crypto';
+import { config,readCsv,normalize } from './normalize';
+const directory=process.argv[2];if(!directory)throw new Error('Použití: npm run import -- /cesta/k/csv');
+const entries=await Promise.all(Object.keys(config).map(async key=>[key,readCsv(await readFile(join(directory,key+'.csv')),key as keyof typeof config)] as const));
+const data=normalize(Object.fromEntries(entries) as Parameters<typeof normalize>[0]);
+const content=JSON.stringify({...data,meta:{...data.meta,importedAt:''}});const id=createHash('sha256').update(content).digest('hex').slice(0,16);
+const q=(s:string)=>"'"+s.replaceAll("'","''")+"'";
+const rows=[`INSERT OR IGNORE INTO datasets(id,reference,imported_at,version) VALUES (${q(id)},${q(data.meta.reference)},${q(data.meta.importedAt)},${q(data.meta.version)});`];
+for(const e of data.employees)rows.push(`INSERT OR IGNORE INTO employees VALUES (${q(id)},${q(e.id)},${q(JSON.stringify(e))});`);
+for(const c of data.courses)rows.push(`INSERT OR IGNORE INTO courses VALUES (${q(id)},${q(c.code)},${q(JSON.stringify(c))});`);
+for(const c of data.completions)rows.push(`INSERT OR IGNORE INTO completions VALUES (${q(id)},${c.sourceRow},${q(c.employeeId)},${q(c.code)},${q(JSON.stringify(c))});`);
+for(const s of data.sessions)rows.push(`INSERT OR IGNORE INTO sessions VALUES (${q(id)},${q(s.id)},${q(s.code)},${s.date?q(s.date):'NULL'},${q(JSON.stringify(s))});`);
+for(const [i,a] of data.audit.entries())rows.push(`INSERT OR IGNORE INTO audit VALUES (${q(id)},${i},${q(JSON.stringify(a))});`);
+// Activation is separate: partial staging never replaces the prior dataset.
+const validation=`(SELECT COUNT(*) FROM employees WHERE dataset_id=${q(id)})=${data.employees.length} AND (SELECT COUNT(*) FROM courses WHERE dataset_id=${q(id)})=${data.courses.length} AND (SELECT COUNT(*) FROM completions WHERE dataset_id=${q(id)})=${data.completions.length} AND (SELECT COUNT(*) FROM sessions WHERE dataset_id=${q(id)})=${data.sessions.length} AND (SELECT COUNT(*) FROM audit WHERE dataset_id=${q(id)})=${data.audit.length}`;
+const activation=`UPDATE datasets SET validated=1 WHERE id=${q(id)} AND ${validation};\nINSERT INTO active_dataset(singleton,dataset_id) SELECT 1,id FROM datasets WHERE id=${q(id)} AND validated=1 ON CONFLICT(singleton) DO UPDATE SET dataset_id=excluded.dataset_id;\n`;
+await mkdir('data',{recursive:true});await writeFile('data/seed.sql',rows.join('\n')+'\n');await writeFile('data/activate.sql',activation);
+await writeFile('data/demo.json',JSON.stringify(data));
+console.log(JSON.stringify({dataset:id,employees:data.employees.length,courses:data.courses.length,completions:data.completions.length,sessions:data.sessions.length,audit:data.audit.length,output:resolve('data')},null,2));

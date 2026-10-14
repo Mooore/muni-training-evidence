@@ -83,3 +83,11 @@ Pravidlo: zaznamenáváme významná rozhodnutí, důvody, ověření a oponentu
 - Uživatel dokončil Cloudflare OAuth. CLI potvrzuje přihlášení; vytvořena vyhrazená D1 databáze muni-training-evidence. Zatím není nasazená aplikace.
 - Sites vyhodnocen, pro schválený stack používáme přímo Cloudflare účet a Wrangler; nevytváříme další Site ani kopii repozitáře.
 - Uživatel poskytl cesty originálů v Downloads. Zůstávají mimo Git; generovaný seed obsahuje pouze povolená doménová pole. Import a doména rozpracované.
+
+### Import a doménový základ (09:13)
+
+- Import skutečně přečetl čtyři exporty z Downloads. Minimalizovaný seed neobsahuje emaily, rodná čísla, poskytovatele ani volné poznámky. Přesné duplicity se porovnávají před minimalizací, aby se nezkryly konflikty zdroje.
+- 7 přesných duplicit a 1 opakovaná hlavička odmítnuty, 2 860 dokladů zachováno; 33 rozporů platnosti s katalogem a 16 konfliktních verzí ID označeno jako nedůvěryhodné.
+- Lokální migrace a seed úspěšné. Oddělená aktivace datasetu kontroluje počty všech tabulek; částečný staging nenahradí aktivní dataset. D1 ukládá pouze minimalizované JSON payloady s indexovanými doménovými klíči.
+- Veřejný scaffold nasazen a ověřen /health s očekávanou verzí a deklarací not-imported. URL: https://muni-training-evidence.mirinda-posp.workers.dev. Plná aplikace zatím nenasazena.
+- 18 unit testů importu, domény, plánovače a bezpečného selhání prošlo. UI a plánovač jsou rozpracované, čekají na integrační/E2E ověření.

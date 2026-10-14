@@ -1,0 +1,10 @@
+PRAGMA foreign_keys = ON;
+CREATE TABLE datasets (id TEXT PRIMARY KEY, reference TEXT NOT NULL, imported_at TEXT NOT NULL, version TEXT NOT NULL, validated INTEGER NOT NULL DEFAULT 0 CHECK(validated IN (0,1)));
+CREATE TABLE active_dataset (singleton INTEGER PRIMARY KEY CHECK(singleton=1), dataset_id TEXT NOT NULL REFERENCES datasets(id));
+CREATE TABLE employees (dataset_id TEXT NOT NULL REFERENCES datasets(id), id TEXT NOT NULL, payload TEXT NOT NULL CHECK(json_valid(payload)), PRIMARY KEY(dataset_id,id));
+CREATE TABLE courses (dataset_id TEXT NOT NULL REFERENCES datasets(id), code TEXT NOT NULL, payload TEXT NOT NULL CHECK(json_valid(payload)), PRIMARY KEY(dataset_id,code));
+CREATE TABLE completions (dataset_id TEXT NOT NULL REFERENCES datasets(id), source_row INTEGER NOT NULL, employee_id TEXT NOT NULL, code TEXT NOT NULL, payload TEXT NOT NULL CHECK(json_valid(payload)), PRIMARY KEY(dataset_id,source_row));
+CREATE INDEX completions_employee_course ON completions(dataset_id,employee_id,code);
+CREATE TABLE sessions (dataset_id TEXT NOT NULL REFERENCES datasets(id), id TEXT NOT NULL, code TEXT NOT NULL, date TEXT, payload TEXT NOT NULL CHECK(json_valid(payload)), PRIMARY KEY(dataset_id,id));
+CREATE INDEX sessions_course_date ON sessions(dataset_id,code,date);
+CREATE TABLE audit (dataset_id TEXT NOT NULL REFERENCES datasets(id), id INTEGER NOT NULL, payload TEXT NOT NULL CHECK(json_valid(payload)), PRIMARY KEY(dataset_id,id));
