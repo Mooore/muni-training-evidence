@@ -82,7 +82,7 @@ Rollback kódu **nevrací data**. Dataset se vrací změnou `active_dataset.data
 
 Výstupní text je escapovaný, dotazy na DB parametrizované, filtry a datum validované, stránky mají CSP, no-store a další bezpečnostní hlavičky. Při chybě DB se vrací 503 bez falešných nul; při chybě plánovače se nevydává kompletní návrh. Aplikace nevytváří vlastní přihlašování ani veřejné zapisovací API.
 
-Demo není produkční HR systém. Reálný provoz potřebuje SSO, role a serverovou autorizaci, audit zápisů, pravidla uchování, zálohy a ověřenou obnovu. Skutečné rezervace vyžadují atomickou kontrolu kapacity a idempotenci. Cloudflare tarif má limity; naměřený výkon není SLA. První načtení auditu a některé požadavky překročily CPU limit Free; kompatibilita všech cest s Free není potvrzena. Na stávajícím účtu bylo demo ověřeno bez runtime chyb. Vynecháno: CRUD, notifikace, exporty, skutečné rezervace a optimální rozvrh.
+Demo není produkční HR systém. Reálný provoz potřebuje SSO, role a serverovou autorizaci, audit zápisů, pravidla uchování, zálohy a ověřenou obnovu. Skutečné rezervace vyžadují atomickou kontrolu kapacity a idempotenci. Cloudflare tarif má limity; naměřený výkon není SLA. Po SQL optimalizaci měl první zachycený audit 12 ms CPU a další 2–8 ms; některé požadavky přehledu/plánovače stále dosáhly 57/61 ms. Kompatibilita všech cest s Free není potvrzena; podmínky malého měření jsou v dokumentaci ověření. Na stávajícím účtu bylo demo ověřeno bez runtime chyb. Vynecháno: CRUD, notifikace, exporty, skutečné rezervace a optimální rozvrh.
 
 ## Dokumentace
 

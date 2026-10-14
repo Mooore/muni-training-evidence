@@ -197,3 +197,12 @@ Pravidlo: zaznamenáváme významná rozhodnutí, důvody, ověření a oponentu
 - Runtime sumarizátor přidává pouze třídu routy a timestamp pro přiřazení CPU měření; neukládá query, employee ID, IP ani hlavičky. Syntetický test prokázal odstranění těchto hodnot. Veřejné CPU měření nové verze zatím čeká.
 
 - Pro nové veřejné měření smoke prochází audit první po count-only health a ověřuje nefiltrovanou i filtrovanou variantu. Celkem šest cest × 12 sekvenčních požadavků, první zvlášť. Nejde o garantovaný nový isolate ani zátěžový test.
+
+
+## 2026-10-14 — veřejné ověření SQL auditu a přejímka (11:10–11:15)
+
+- Commit fb600f5 zveřejněn, vzdálená migrace 0002 úspěšná. Nasazena verze 8e826edf-e3ea-47d9-b857-713b2fe4d4a4 se stejným datasetem 8329fc51214bfc0b; deploy gate a obsahový smoke úspěšné, automatický rollback nebyl potřeba.
+- 32 testů, build a 7 veřejných E2E úspěšných. GitHub CI 38539835227 success včetně čisté instalace, migrací, seedu a browser testů. Desktop obsah 315 ms, simulovaný mobil LCP 372 ms; jednotlivé vzorky, nikoli SLA.
+- Sanitizovaný runtime tail zachytil 32 událostí nové verze, všechny ok. Audit n=13: první 12 ms CPU, dalších 12 hodnot 2–8 ms; proti staršímu prvnímu auditu 45 ms jde o orientační zlepšení, nikoli kontrolovaný cold-start experiment. Tail nezachytil každý požadavek. Přehled první 57 ms, plánovač maximum 61 ms: CPU/Free omezení celé aplikace přetrvává, výsledek není označen jako úplné vyřešení. Měření ukončeno, pouze minimalizovaný lokální artefakt mimo Git.
+- HTTP smoke šest cest × 12 bez chyb; audit median/p95 155,5/198,1 ms, přehled 89,9/131,4, návrh 90,2/102,9. Čekání na DB i síť se neplete s CPU; audit přidal několik malých SQL dotazů výměnou za nezávislost a omezené parsování.
+- Zkontrolována shoda README s package scripts/CI/migracemi a aktuální stručné odevzdání. Výsledky a podmínky doplněny do VERIFICATION/STATUS; žádné další služby ani tarif nebyly zavedeny. Závěrečná přejímka schválené iterace hotová před 12:20, zůstávají výslovné produkční výluky.

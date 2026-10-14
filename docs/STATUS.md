@@ -1,6 +1,6 @@
 # Stav realizace
 
-Poslední aktualizace: 2026-10-14 11:04 Europe/Prague.
+Poslední aktualizace: 2026-10-14 11:15 Europe/Prague.
 
 ## Čas
 
@@ -28,11 +28,11 @@ Termín 12:20 Europe/Prague. V 09:44 bylo hotovo s rezervou 156 minut do termín
 
 ## Ověření a otevřené hranice
 
-30 unit/integration testů prošlo, typecheck prošel. Šest prohlížečových průchodů prošlo lokálně i na veřejné verzi s opravenými jmény. Čistá kopie: instalace, migrace, seed, tehdejších 20 testů, build i skutečné HTTP spuštění prošly. Dataset rollback nacvičen lokálně. GitHub CI aplikačního commitu 1b38fb4 úspěšné včetně browser testů.
+32 unit/integration testů, typecheck a build prošly. Sedm prohlížečových průchodů prošlo lokálně i veřejně. GitHub CI poslední aplikační revize úspěšné včetně čisté instalace, migrací, seedu a E2E. Dřívější nezávislé lokální spuštění čistého exportu i návrat datasetu jsou doloženy ve VERIFICATION.
 
-Veřejně ověřená aktuální aplikační revize 1b38fb4, dataset 8329fc51214bfc0b, Cloudflare version 9acdf47e-385d-4671-840e-41c6661caa98. Následný dokumentační commit nemění běžící kód. Všechny implementační milníky byly commitnuty a pushnuty. Poslední HTTP smoke: přehled medián/p95 celého přenosu 119/283 ms; návrh 87,2/403,5 ms. Malý vzorek zahrnuje síť; výsledek není SLA.
+Veřejně ověřená aplikační revize fb600f5, dataset 8329fc51214bfc0b, Cloudflare version 8e826edf-e3ea-47d9-b857-713b2fe4d4a4. Následný dokumentační commit nemění běžící kód. Poslední HTTP smoke: audit medián/p95 155,5/198,1 ms; přehled 89,9/131,4 ms; návrh 90,2/102,9 ms. Vzorek zahrnuje síť a není SLA.
 
-Výkonové cíle interakcí splněny v omezeném měření. CPU studeného auditu a některých požadavků překračuje 10 ms Free limit; vhodnost všech cest pro Workers Free není potvrzena. Aktuální hosting neměl runtime chyby, konkrétní billing tarif nelze s oprávněním ověřit (403); žádný tarif nebyl změněn. Nejde o produkční SLA.
+SQL audit: první zachycený požadavek 12 ms CPU, další 2–8 ms. Zachycené špičky přehledu/plánovače 57/61 ms stále překračují 10 ms Free limit; vhodnost celé aplikace pro Free není potvrzena. Všech 32 zachycených runtime událostí bylo ok, tail neobsahuje všechny požadavky. Konkrétní billing tarif nelze s oprávněním ověřit (403); žádný tarif nebyl změněn. Podmínky měření a přejímka jsou ve VERIFICATION.
 
 Vědomě vynecháno dle plánu: SSO/role, CRUD, skutečné rezervace, notifikace, exporty, optimální rozvrh. Automatický návrat kódu je připraven, jeho chybová větev nebyla na veřejném hostingu záměrně vyvolána. Žádná testovací/hostovací neznámá není vydávána za ověřenou.
 
@@ -48,6 +48,6 @@ Nasazen graf splnění s unikátními osobami (90/153), konkrétní úkoly, rozb
 
 Veřejně ověřena auditovaná oprava šesti běžných křestních jmen včetně LUCIE → Lucie. Dataset 8329fc51214bfc0b, šest dodatečných oprav, stejná ID a všechny doménové výsledky. 30 testů, build, 6 lokálních i veřejných E2E a CI úspěšné. Před změnou exportována záloha D1 mimo Git; předchozí dataset je stále uložen pro návrat.
 
-## SQL audit a přejímka (11:04)
+## SQL audit a přejímka (hotovo 11:15)
 
-Lokálně hotová nezávislá auditní cesta s SQL agregacemi, filtrováním a stránkou nejvýše 30 událostí; health bez parsování datasetu. 32 testů, build a 7 E2E úspěšné. Index aplikován lokálně. Dále: commit, nedestruktivní vzdálený index, deploy a veřejné CPU/HTTP měření, přejímka.
+Audit filtruje a stránkuje v SQL, přenáší nejvýše 30 událostí a malé agregace. Health neparsuje celý dataset. Index aplikován lokálně i vzdáleně, nasazení a veřejný smoke úspěšné. 32 testů, build, 7 lokálních i veřejných E2E a CI úspěšné. README a stručné odevzdání zkontrolovány, výsledky i zbývající CPU omezení zapsány. Schválený rozsah této iterace dokončen.

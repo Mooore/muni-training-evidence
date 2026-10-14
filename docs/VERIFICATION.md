@@ -44,7 +44,7 @@ Na obou sadách ověřena kapacita po odečtení obsazenosti, unikátnost osoba/
 
 Před optimalizací runtime tail ukázal 44–74 ms CPU. Po oddělení auditu a opakovaném použití neměnného datasetu v paměti: prvních osm sledovaných sekvenčních požadavků 5–9 ms CPU, všechny outcome=ok. Další prohlížečové požadavky zahrnovaly 45 ms při prvním načtení auditu a hodnoty 14–16 ms. **Nelze slíbit, že všechny cesty a cold start vyhovují Workers Free.** [Oficiální limit Free je 10 ms CPU](https://developers.cloudflare.com/workers/platform/limits/).
 
-Konkrétní běžící Worker má usage_model=standard a bez explicitního CPU limitu. Billing tarif se s dostupným OAuth oprávněním ověřit nepodařilo (403). Žádný tarif nebyl změněn ani objednán. Aktuální veřejný hosting požadavky obsloužil bez limitních chyb; to není garance chování na jiném/free účtu. Další optimalizací by bylo stránkování auditu přímo v SQL a omezení studeného načítání celého datasetu. Před produkcí nebo přesunem na Free nutno ověřit.
+Konkrétní běžící Worker má usage_model=standard a bez explicitního CPU limitu. Billing tarif se s dostupným OAuth oprávněním ověřit nepodařilo (403). Žádný tarif nebyl změněn ani objednán. Aktuální veřejný hosting požadavky obsloužil bez limitních chyb; to není garance chování na jiném/free účtu. SQL stránkování auditu bylo následně realizováno a přeměřeno níže. Omezení studeného načítání celého datasetu pro ostatní cesty zůstává dalším možným krokem. Před produkcí nebo přesunem na Free nutno ověřit.
 
 Snapshot cache je pouze interní paměť stejného isolate. Aktivní pointer se vždy čte z DB; její výpadek vrací chybu a změna pointeru invaliduje snapshot. Veřejné odpovědi mají no-store. Runtime kontrola byla dočasná; sdílené výsledky obsahují jen časy, outcome a verzi, nikoli request IP/hlavičky.
 
@@ -103,3 +103,27 @@ Omezený veřejný smoke se stejnou metodikou:
 | `/quality?level=warning` | 69.1 | 186.8 | 99.0 |
 
 Desktopový obsah přehledu viditelný za 274 ms, simulovaný mobil LCP 384 ms. Jednotlivé vzorky za stejných podmínek jako výše, nikoli SLA. Žádná chyba HTTP během smoke; předchozí CPU/Free omezení nadále platí.
+
+
+## SQL audit a závěrečná přejímka (11:15)
+
+Veřejná aplikace `fb600f52ff7af4fa12dd88014e2ba5bc8714ae4c`, Cloudflare verze `8e826edf-e3ea-47d9-b857-713b2fe4d4a4`, dataset nadále `8329fc51214bfc0b`. Nedestruktivní index z migrace 0002 aplikován lokálně i vzdáleně. Audit nyní počítá a filtruje v SQL a parsuje nejvýše 30 událostí; nezávisí na načtení ostatních entit. Health čte metadata a počty, neověřuje obsah každého dokladu.
+
+32 unit/integration testů, typecheck, build a 7 lokálních i veřejných Playwright průchodů úspěšných. Nová ověření zahrnují stabilní pořadí/stránkování, globální souhrny, literální hledání s injekčními znaky a nezávislost auditu na poškozeném dokladu při zachování 503 na přehledu. [CI této revize](https://github.com/Mooore/muni-training-evidence/actions/runs/38539835227) úspěšné včetně instalace, čistých migrací, seedu a E2E.
+
+HTTP smoke: 12 sekvenčních požadavků na každou cestu, audit první po count-only health. První odpověď oddělena od zbývajících 11; Node fetch čte celé tělo. Medián/p95 nejsou produkční distribuce, zahrnují síť.
+
+| Cesta | První přenos ms | Další medián / p95 ms |
+| --- | ---: | ---: |
+| Audit | 172,2 | 155,5 / 198,1 |
+| Audit, warning | 185,1 | 150,6 / 320,3 |
+| Přehled | 260,5 | 89,9 / 131,4 |
+| Přehled, útvar | 93,1 | 88,1 / 118,3 |
+| Detail | 73,1 | 79,5 / 89,9 |
+| Návrh | 100 | 90,2 / 102,9 |
+
+Runtime tail zachytil 32 událostí nové verze během smoke a E2E, všechny `outcome=ok`; není to kompletní záznam všech požadavků. Ukládaly se jen čas, CPU/wall time, verze a třída routy, bez query, ID osoby, IP a hlaviček. Z 13 zachycených auditů měl první 12 ms CPU, dalších 12 rozsah 2–8 ms (medián celé auditní sady 5 ms). Starší první audit měl 45 ms; jde o orientační historické srovnání, nikoli řízený experiment ve stejném isolate. První požadavek po deploy není garantovaný cold start. První zachycený přehled měl 57 ms a nejvyšší zachycený plánovač 61 ms. Samotné SQL stránkování tedy **neřeší Free kompatibilitu celé aplikace**. Na aktuálním hostingu nebyly pozorovány runtime chyby, billing tarif nadále neověřen a nezměněn. Oficiální Free limit 10 ms CPU znovu ověřen 14. 10. 2026 v odkazu výše.
+
+Veřejný desktopový obsah viditelný za 315 ms, simulovaný mobil LCP 372 ms, stejné podmínky jako výše a jeden vzorek na režim.
+
+Přejímka: README odpovídá aktuálním příkazům a migracím; čisté spuštění poslední revize ověřilo CI. Stručné odevzdání obsahuje veřejné odkazy, rozsah, doménová rozhodnutí, způsob spuštění, ověření a produkční výluky. Originální CSV a lokální zálohy zůstávají mimo Git. Dataset ani pravidla přiřazení tato úprava nemění. Automatická chybová větev návratu kódu nebyla veřejně vyvolána; dříve nacvičený lokální návrat datasetu zůstává doložen výše. MVP připraveno k odevzdání před termínem 12:20.
