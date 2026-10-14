@@ -230,3 +230,12 @@ Pravidlo: zaznamenáváme významná rozhodnutí, důvody, ověření a oponentu
 
 - Veřejně nasazena revize 0f329c2, Cloudflare f768d6d0-0ef6-4b71-b81a-2a3a1dddb729; gate/smoke úspěšné. Všech 17 veřejných E2E úspěšných, stejně tak čisté GitHub CI 38542616573 s 32 testy/buildem/migrací/seedem a browser průchody. Přístupný název grafu odpovídá vybranému kurzu.
 - HTTP přehled median/p95 63,6/171,9 ms, plán 67,1/97,1 ms; desktop obsah 253 ms, mobil LCP 372 ms v dosavadní simulaci. Nejde o SLA, CPU znovu neměřeno. Úprava dokončena a dokumentována v 11:31, před termínem; dataset a plánovač beze změny.
+
+
+## 2026-10-14 — rychlé stavové bubliny (11:32–11:37)
+
+- Uživatel žádá výpis konkrétních školení po najetí na stavovou skupinu v tabulce. Doplněny celé názvy/kódy v nativním popoveru nad tabulkou, samostatně pro osobu/stav, se shodou na aktivním filtru kurzu. Texty jsou escapované.
+- Vanilla JS pouze na přehledu s bublinami přidává hover, klávesnicový focus a pozici v mezích viewportu. Kliknutí/klepnutí, Escape a kliknutí mimo využívají nativní popover. CSS/JS stejného původu, CSP nově dovoluje jen self skripty, bez inline/eval. Nová služba ani framework nejsou potřeba.
+- Testy odhalily reálnou chybu první verze: zavření při scrollu ukončilo bublinu otevřenou automatickým posunem na focus/hover. Opraveno na přepočet polohy a zavření jen po odchodu kotvy z obrazovky. Opraveny i testovací předpoklady o pořadí katalogu a dalším tabulátoru; samostatný dotykový kontext nahrazuje neúplnou emulaci.
+- Celá lokální sada 20 E2E prošla, screenshot bubliny vizuálně ověřen (čitelný úplný seznam, bez ořezu tabulkou). Dodatečně doplněn test nativního kliknutí/Escape bez JS a zavření po odjezdu myši; čeká závěrečný běh a veřejné nasazení.
+- Dodatečné čtyři cílené E2E prošly: přesné seznamy všech stavů, hover a odjezd myši, keyboard focus/Escape, mobilní tap/outside a viewport, nativní kliknutí/Escape s vypnutým JS. Typecheck, 32 testů a build rovněž prošly.

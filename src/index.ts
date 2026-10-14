@@ -9,7 +9,7 @@ type Env={Bindings:{DB:D1Database;APP_REVISION?:string};Variables:{data:Dataset;
 const app=new Hono<Env>();
 app.use('*',async(c,next)=>{
  const started=performance.now();
- c.header('Content-Security-Policy',"default-src 'none'; style-src 'self'; img-src 'self'; form-action 'self'; base-uri 'none'; frame-ancestors 'none'");
+ c.header('Content-Security-Policy',"default-src 'none'; style-src 'self'; script-src 'self'; img-src 'self'; form-action 'self'; base-uri 'none'; frame-ancestors 'none'");
  c.header('X-Content-Type-Options','nosniff');c.header('Referrer-Policy','no-referrer');c.header('X-Frame-Options','DENY');c.header('Cache-Control','no-store');
  if(c.req.method!=='GET' && c.req.method!=='HEAD')return c.text('Pouze čtení.',405);
  await next();

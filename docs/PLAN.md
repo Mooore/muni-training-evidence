@@ -146,3 +146,8 @@ Po uživatelově upozornění na caps-lock „LUCIE“ je import doplněn explic
 ## Filtr konkrétního školení — 2026-10-14
 
 Uživatel požaduje ověřit, zda všichni mají například BOZP. Viditelný výběr školení podle názvu/kódu omezuje graf, úkoly, stavové počty a seznam osob na zvolený kurz. Pro kurz povinný jen části zaměstnanců se zobrazují osoby s povinností nebo nejasnou povinností; osoby bez povinnosti jsou samostatně vyčíslené a nezvyšují procento splnění. Kombinace s útvarem, datem, způsobilostí, hledáním a stavem zachovány. Plánovač se nemění.
+
+
+## Rychlý výpis školení ze stavové skupiny — 2026-10-14
+
+Uživatel požaduje bublinu při najetí na stav ve sloupci Povinná školení. U každé osoby/skupiny zobrazit celé názvy a kódy odpovídajících školení, respektovat filtr kurzu. Ovládání také klávesnicí a dotykem, Escape a kliknutí mimo zavírá. Nativní popover v horní vrstvě zamezuje ořezu scrollovací tabulkou; drobný vanilla JS doplňuje hover/focus a umístění, bez nového frameworku/služby. Data i pravidla se nemění.

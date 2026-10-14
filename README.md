@@ -33,6 +33,7 @@ Na macOS E2E standardně používají instalovaný Google Chrome; v CI používa
 ## Co aplikace řeší
 
 - Přehled s grafem aktuálního splnění (každá osoba jednou), konkrétními úkoly pro prošlá/chybějící školení a nejasné údaje, méně naléhavými obnovami do 60 dnů a odkazy do filtrovaného seznamu. Podrobné počty jsou k rozbalení. Hledání, útvar a konkrétní školení (celý název i kód) jsou viditelné, datum/způsobilost/stav pod dalšími filtry; aktivní omezení je automaticky otevřené.
+- Stavové skupiny v seznamu osob mají bublinu s celými názvy a kódy školení. Otevření myší nebo klávesnicovým focusem, kliknutím/klepnutím; zavření Escape nebo mimo. Seznam respektuje filtr školení. Nativní kliknutí funguje i bez pomocného JS.
 - Detail s pravidlem povinnosti, důvěryhodným dokladem, platností a varováním; historie zahrnuje i problematické doklady.
 - Audit oprav, odmítnutí a upozornění se zdrojovým ID a číslem logického CSV řádku.
 - Návrh pro 60 dnů: celé názvy školení, skutečné pořadí výpočtu a jeho datum, důvod potřeby a volby termínu, odečtená obsazenost, kolize napříč kurzy, způsobilost v den termínu a konkrétní důvody nezařazení.
@@ -47,7 +48,7 @@ Priorita: u chybějícího školení se pro řazení používá nástup, u proš
 
 ## Architektura a import
 
-TypeScript + Hono, serverové HTML bez klientského frameworku a aplikačního JavaScriptu, SCSS/Dart Sass, Cloudflare Workers a D1/SQLite. Doména v `src/domain/` nezávisí na Hono ani D1. `src/repository.ts` načítá data dávkově; SQL klíče mají indexy. Audit má samostatný read model: filtr, počty a stránkování se provádějí v SQL, do Workeru přijde nejvýše 30 událostí a malé agregace. Nevyžaduje načtení zaměstnanců/dokladů/termínů. `/health` kontroluje dostupnost aktivního datasetu a jeho počty; obsah a funkční průchod ověřují navazující smoke/E2E, nejde o kontrolu každého payloadu. Minimalizované entity jsou uloženy jako JSON payloady s relačními klíči, nikoli jako plně normalizovaný budoucí produkční model. HTTP poskytuje pouze čtení.
+TypeScript + Hono, serverové HTML bez klientského frameworku, s malým vanilla JS pouze pro hover/focus a umístění bublin, SCSS/Dart Sass, Cloudflare Workers a D1/SQLite. Doména v `src/domain/` nezávisí na Hono ani D1. `src/repository.ts` načítá data dávkově; SQL klíče mají indexy. Audit má samostatný read model: filtr, počty a stránkování se provádějí v SQL, do Workeru přijde nejvýše 30 událostí a malé agregace. Nevyžaduje načtení zaměstnanců/dokladů/termínů. `/health` kontroluje dostupnost aktivního datasetu a jeho počty; obsah a funkční průchod ověřují navazující smoke/E2E, nejde o kontrolu každého payloadu. Minimalizované entity jsou uloženy jako JSON payloady s relačními klíči, nikoli jako plně normalizovaný budoucí produkční model. HTTP poskytuje pouze čtení.
 
 Originální CSV zůstávají mimo Git. Běhová data neobsahují emaily, rodná čísla, volné poznámky ani poskytovatele. Jméno, útvar a pozice zůstávají syntetické. Parser respektuje citované oddělovače a víceřádkové buňky; absolvování čte jako Windows-1250 se středníkem, termíny UTF-8 se středníkem, ostatní UTF-8 s čárkou.
 

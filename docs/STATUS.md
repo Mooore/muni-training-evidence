@@ -62,3 +62,8 @@ Osm nových scénářů chrání konkrétní ID/počty, všechny volby útvarů/
 ## Filtr školení (hotovo 11:31)
 
 Implementován výběr celého názvu/kódu školení, který omezuje graf, úkoly a seznam. 32 unit/integration testů, typy/build, 17 lokálních i veřejných E2E a čisté CI úspěšné. Nasazena revize 0f329c2. BOZP-Z referenčně 137/153 aktivních splněno, 9 prošlé a 7 chybí k 1. 10. 2026. Povinnost/nejistota odlišena od osob bez povinnosti.
+
+
+## Stavové bubliny (rozpracováno 11:37)
+
+Implementován rychlý výpis celých názvů/kódů školení po najetí/focusu/klepnutí na stav v tabulce. Respektuje konkrétní školení, nad scrollovací tabulkou, Escape/outside dismiss. 20 lokálních E2E úspěšných; doplněn fallback bez JS, čeká závěrečný běh, commit a nasazení.

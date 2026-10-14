@@ -170,7 +170,7 @@ test('every course limits the graph, counts and rows to applicable selected trai
    const fulfilled=items.filter(o=>o.required===true&&['valid','expiring'].includes(o.state)).length;
    await expect(page.getByRole('progressbar')).toHaveAttribute('value',String(fulfilled));
    await expect(page.getByRole('progressbar')).toHaveAttribute('max',String(ids.length));
-   const rowBadges=await page.locator('.employees-table tbody .badges > span > strong').allTextContents();
+   const rowBadges=await page.locator('.employees-table tbody .training-trigger > strong').allTextContents();
    expect(rowBadges).toEqual(ids.slice(0,20).map(()=>'1'));
   }else{
    await expect(page.getByRole('progressbar')).toHaveCount(0);
