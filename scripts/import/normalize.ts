@@ -32,13 +32,15 @@ export function normalize(input:Record<File,Row[]>,importedAt=new Date().toISOSt
   if(end && start && end<start) issues.push('Ukončení před nástupem.');
   if(!['aktivní','ukončen','rodičovská'].includes(r.stav)) issues.push('Neznámý stav.');
   if(r.stav==='ukončen' && !end) issues.push('Ukončený zaměstnanec bez data ukončení.');
+  if(r.stav==='aktivní' && end && end<'2026-10-01') issues.push('Aktivní stav je v rozporu s ukončením před exportem.');
+  if(r.stav==='ukončen' && end && end>'2026-10-01') issues.push('Ukončený stav je v rozporu s budoucím ukončením k exportu.');
   for(const reason of issues) note('zamestnanci',row,id,'warning',reason);
   return {id,name:`${r.jmeno.trim()} ${r.prijmeni.trim()}`,department,position:r.pozice.trim(),start,end,status:r.stav,issues};
  });
  if(employees.some(e=>!e.id) || new Set(employees.map(e=>e.id)).size!==employees.length) throw new Error('Chybějící nebo duplicitní ID zaměstnance; import zastaven.');
  const courses:Course[]=input.katalog_skoleni.map((r,i)=>{const id=code(r.kod,'katalog_skoleni',i+2,r.kod),issues:string[]=[];let months=r.platnost_mesicu==='2 roky'?24:r.platnost_mesicu.trim()===''?null:integer(r.platnost_mesicu);
  if(r.platnost_mesicu==='2 roky') note('katalog_skoleni',i+2,id,'repair','2 roky interpretováno jako 24 kalendářních měsíců.');
- if(months===null && r.povinne_pro!=='NEPOVINNE') issues.push('Neznámá perioda povinného školení.');
+ if(months===null && (r.platnost_mesicu.trim()!=='' || r.povinne_pro!=='NEPOVINNE')) issues.push('Neplatná nebo neznámá perioda školení.');
  if(!/^(VSICHNI|NEPOVINNE|UTVAR:.+|POZICE:.+)$/.test(r.povinne_pro)) issues.push('Neznámé pravidlo povinnosti.');
  for(const reason of issues) note('katalog_skoleni',i+2,id,'warning',reason);
  return {code:id,name:r.nazev,months,requirement:r.povinne_pro,issues};});

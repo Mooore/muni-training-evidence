@@ -6,8 +6,8 @@ Funkční evidence školení pro praktický úkol MUNI. Přibližně 4 hodiny na
 
 ## Pracovní postup
 
-- Zatím probíhá plánování. Implementovat až po dohodě s uživatelem.
-- Návrhy a předpoklady jsou v docs/PLAN.md; neprezentovat je jako schválené.
+- Plán byl uživatelem schválen 2026-10-14; implementace a průběžné commity jsou autorizované. Termín dokončení 12:20 Europe/Prague.
+- Schválený rozsah a předpoklady jsou v docs/PLAN.md. Nové návrhy mimo tento rozsah neprezentovat jako schválené.
 - Významná rozhodnutí, lidskou oponenturu, opravy AI a ověření průběžně zapisovat do docs/WORK_LOG.md. Nepřipisovat uživateli nevyřčené závěry.
 - Po každém funkčním milníku udělat malý smysluplný commit, jakmile bude Git dostupný. Nečekat na kompletní aplikaci.
 - Nezavádět další služby/frameworky bez konkrétního důvodu. Doména nesmí záviset na HTTP frameworku nebo hostingu.

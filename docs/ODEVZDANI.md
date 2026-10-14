@@ -1,7 +1,7 @@
 # Evidence školení — odevzdání
 
 **Demo:** https://muni-training-evidence.mirinda-posp.workers.dev  
-**Zdroj:** https://github.com/Mooore/muni-training-evidence (soukromý; vlastník musí zajistit přístup hodnotiteli)
+**Zdroj:** https://github.com/Mooore/muni-training-evidence
 
 Aplikace poskytuje přehled povinných školení, filtraci osob, detail dokladů, audit kvality dat a vysvětlitelný návrh přiřazení na termíny. Výchozí datum 1. 10. 2026 je výrazně označený historický snapshot. Všechna data jsou syntetická; zacházení s nimi demonstruje minimalizaci citlivých údajů.
 

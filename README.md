@@ -4,7 +4,7 @@
 
 Demo: https://muni-training-evidence.mirinda-posp.workers.dev
 
-Zdroj: https://github.com/Mooore/muni-training-evidence (aktuálně soukromý; přístup hodnotiteli musí zajistit vlastník).
+Zdroj: https://github.com/Mooore/muni-training-evidence.
 
 ## Lokální spuštění
 
@@ -70,7 +70,7 @@ npx wrangler d1 execute DB --remote --file data/activate.sql
 npm run deploy
 ```
 
-`deploy` spouští typecheck, testy a build před publikací. Vloží revizi Git commitu; následný smoke ověřuje skutečný dataset, počty, revizi, reprezentativní stránky a hlavičky, nikoli jen HTTP 200. Změny se mají nejprve commitnout. Výkonový smoke je omezený na 12 sekvenčních požadavků na pět cest, první odpověď odděluje od dalších.
+`deploy` spouští typecheck, testy a build před publikací. Vloží revizi Git commitu; následný smoke ověřuje skutečný dataset, počty, revizi, reprezentativní stránky a hlavičky, nikoli jen HTTP 200. Skript odmítne nečistý pracovní strom před kontrolami i po buildu; revize musí odpovídat skutečným zdrojům. Výkonový smoke je omezený na 12 sekvenčních požadavků na pět cest, první odpověď odděluje od dalších.
 
 Pokud již existuje ověřená verze kompatibilní se stejným datasetem, lze nastavit `ROLLBACK_VERSION=<Cloudflare-version-id> npm run deploy`. Při neúspěchu smoke se kód vrátí k této konkrétní verzi a smoke zopakuje; neúspěšný deploy se přesto hlásí jako chyba. Bez explicitní verze se nic naslepo nevrací. Manuálně: `npx wrangler rollback <version-id> --yes`.
 
@@ -80,12 +80,14 @@ Rollback kódu **nevrací data**. Dataset se vrací změnou `active_dataset.data
 
 Výstupní text je escapovaný, dotazy na DB parametrizované, filtry a datum validované, stránky mají CSP, no-store a další bezpečnostní hlavičky. Při chybě DB se vrací 503 bez falešných nul; při chybě plánovače se nevydává kompletní návrh. Aplikace nevytváří vlastní přihlašování ani veřejné zapisovací API.
 
-Demo není produkční HR systém. Reálný provoz potřebuje SSO, role a serverovou autorizaci, audit zápisů, pravidla uchování, zálohy a ověřenou obnovu. Skutečné rezervace vyžadují atomickou kontrolu kapacity a idempotenci. Cloudflare tarif má limity; naměřený výkon není SLA. Vynecháno: CRUD, notifikace, exporty, skutečné rezervace a optimální rozvrh.
+Demo není produkční HR systém. Reálný provoz potřebuje SSO, role a serverovou autorizaci, audit zápisů, pravidla uchování, zálohy a ověřenou obnovu. Skutečné rezervace vyžadují atomickou kontrolu kapacity a idempotenci. Cloudflare tarif má limity; naměřený výkon není SLA. První načtení auditu a některé požadavky překročily CPU limit Free; kompatibilita všech cest s Free není potvrzena. Na stávajícím účtu bylo demo ověřeno bez runtime chyb. Vynecháno: CRUD, notifikace, exporty, skutečné rezervace a optimální rozvrh.
 
 ## Dokumentace
 
 - [Schválený plán a předpoklady](docs/PLAN.md)
-- [Aktuální stav a ověření](docs/STATUS.md)
+- [Aktuální stav](docs/STATUS.md)
+- [Výsledky ověření a výkonová omezení](docs/VERIFICATION.md)
+- [Stručné odevzdání](docs/ODEVZDANI.md)
 - [Work log, opravy AI a oponentura](docs/WORK_LOG.md)
 - [Původní profil dat](docs/data-audit.json)
 - [Pravidla projektu](AGENTS.md)

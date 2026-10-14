@@ -1,31 +1,37 @@
 # Stav realizace
 
-Poslední aktualizace: 2026-10-14 09:20 Europe/Prague.
+Poslední aktualizace: 2026-10-14 09:41 Europe/Prague.
 
 ## Čas
 
-Celkový limit: přibližně 240 minut včetně analýzy, implementace, ověření a odevzdání.
-Uživatel upřesnil začátek přibližně 08:00 s přestávkami, konečný čas přibližně 12:20 Europe/Prague. V 08:47 zbývá přibližně 213 minut do konce. Analýza se počítá; čas implementace limit neresetuje.
+Termín 12:20 Europe/Prague. V 09:41 zbývá 159 minut. Začátek byl podle uživatele přibližně v 08:00 s přestávkami; nejde o přesně změřený osobně odpracovaný čas. Rozpočet nebyl resetován implementací.
 
 ## Kroky
 
 | Krok | Stav | Výstup / podmínka |
 | --- | --- | --- |
-| 0. Analýza a schválení | Hotovo | Schválený plán a průběžný log |
-| 1. Git a provozní podmínky | Hotovo | GitHub ověřen, dokumentace a scaffold commitnuté a pushnuté |
-| 2. Minimální projekt a deploy | Hotovo pro základ | Veřejná URL odpovídá health obsahem; plné UI zatím nenasazeno |
-| 3. Import a databáze | Lokálně ověřeno | 174 osob, 10 kurzů, 2 860 dokladů, 34 termínů; staging + oddělená aktivace |
-| 4. Doména a testy | Základ ověřen | Import, platnost a způsobilost mají hraniční testy |
-| 5. UI a SCSS | Lokálně ověřeno (E2E) | Přehled, detail, audit, termíny |
-| 6. Plánovač | Lokálně ověřen včetně celé a 10× sady | Návrh, důvody, kapacita a kolize |
-| 7. Závěrečné ověření a odevzdání | Čeká | E2E, výkon, plný deploy, README, odevzdání |
+| 0. Analýza a schválení | Hotovo | Schválený plán, dohledatelné předpoklady |
+| 1. Git a provozní podmínky | Hotovo | GitHub ověřen, průběžné commity/pushe; na výslovný souhlas repozitář zveřejněn |
+| 2. Minimální projekt a deploy | Hotovo | Veřejný Worker + D1; plná aplikace obsahově ověřena |
+| 3. Import a databáze | Hotovo pro dodané exporty | Minimalizace, audit, neměnné datasety a kontrolovaná aktivace |
+| 4. Doména a testy | Hotovo v rozsahu MVP | Platnost, povinnosti, nejistota, způsobilost, hraniční testy |
+| 5. UI a SCSS | Hotovo | Přehled, detail, filtry, audit, termíny; mobilní přehled bez vodorovného posunu |
+| 6. Plánovač | Hotovo v rozsahu heuristiky | Návrh nic nerezervuje; kapacity, kolize, důvody; ověřen i na 10× sadě |
+| 7. Ověření a odevzdání | Dokončování posledního commitu | README, odevzdání, výsledky; čeká závěrečný commit/deploy veřejného odkazu a kontrola CI |
 
-## Teď a dále
+## Odkazy
 
-Teď: lokální integrační a prohlížečové ověření. Následuje oprava zjištění, plný deploy a měření výkonu.
-Veřejný základ: https://muni-training-evidence.mirinda-posp.workers.dev (zatím pouze scaffold, nikoli hotová aplikace).
-Čas: v 09:13 zbývá do 12:20 asi 187 minut; jde o čas do termínu, nikoli evidenci osobně odpracovaného času.
+- Demo: https://muni-training-evidence.mirinda-posp.workers.dev
+- Veřejný zdroj: https://github.com/Mooore/muni-training-evidence
+- [Přesné výsledky a podmínky ověření](VERIFICATION.md)
+- [Stručné odevzdání](ODEVZDANI.md)
 
-## Ověření
+## Ověření a otevřené hranice
 
-20 automatických testů a 2 E2E průchody prošly. Typecheck prošel. První scaffold dry-run build a deploy prošly, HTTP /health ověřen. Lokální migrace, seed i aktivace úspěšné. Lokální prohlížeč a výkon ověřeny. Plný veřejný deployment a výkon hostingu ještě čekají.
+23 unit/integration testů prošlo, typecheck prošel. Tři prohlížečové průchody prošly lokálně i na veřejné optimalizované revizi. Čistá kopie: instalace, migrace, seed, tehdejších 20 testů, build i skutečné HTTP spuštění prošly. Dataset rollback nacvičen lokálně. Dosavadní GitHub CI úspěšné; poslední změny čekají commit.
+
+Veřejně ověřená kódová revize zatím 2311d72, dataset 239aef0a043c4b76. Poslední změny jsou veřejný text odkazu, zpřísnění hraničních validací importu a dodatečné testy; finální deploy čeká commit.
+
+Výkonové cíle interakcí splněny v omezeném měření. CPU studeného auditu a některých požadavků překračuje 10 ms Free limit; vhodnost všech cest pro Workers Free není potvrzena. Aktuální hosting neměl runtime chyby, konkrétní billing tarif nelze s oprávněním ověřit (403); žádný tarif nebyl změněn. Nejde o produkční SLA.
+
+Vědomě vynecháno dle plánu: SSO/role, CRUD, skutečné rezervace, notifikace, exporty, optimální rozvrh. Automatický návrat kódu je připraven, jeho chybová větev nebyla na veřejném hostingu záměrně vyvolána. Žádná testovací/hostovací neznámá není vydávána za ověřenou.

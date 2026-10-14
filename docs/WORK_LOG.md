@@ -117,3 +117,12 @@ Pravidlo: zaznamenáváme významná rozhodnutí, důvody, ověření a oponentu
 - Tři veřejné Playwright průchody úspěšné. Desktop obsah viditelný za 485 ms. Simulace mobilu 390×844, 150 ms latence, 1,6 Mbps down / 0,6 Mbps up, 4× CPU, bez cache: LCP 436 ms. Jeden vzorek není produkční distribuce.
 - Doplňková runtime kontrola odhalila 44–74 ms CPU přes rychlý HTTP výsledek. Oficiální Workers Free limit je 10 ms, proto nelze tvrdit vhodnost pro tento tarif. Nastavení Workeru hlásí usage_model=standard, konkrétní billing plán nelze s OAuth oprávněním číst (403). Žádné placené služby ani tarif nebyly objednány/změněny.
 - Oprava: audit se načítá jen pro auditní stránku, neměnný dataset je možné znovu použít v paměti stejného Worker isolate. Aktivní pointer se vždy čte z DB, chyba DB stále vrací 503 a změna datasetu invaliduje cache. Lokální testy/E2E prošly, veřejné CPU se musí přeměřit.
+
+### Dokončení a veřejný zdroj (09:41)
+
+- Optimalizovaná revize 2311d72 nasazena a obsahově ověřena. Opakované veřejné E2E prošly; desktop 315 ms do viditelného obsahu a simulovaný mobil LCP 372 ms v jednom vzorku.
+- Runtime po optimalizaci: zahřátá sekvenční sada 5–9 ms CPU; první audit 45 ms, některé další požadavky 14–16 ms. Všechny sledované výsledky ok; Free kompatibilitu všech cest nelze tvrdit. Omezení je v README, VERIFICATION i STATUS.
+- Čistý export 2311d72: npm ci (audit 0), migrace, seed, 20 tehdejších testů, typecheck, build i samostatný server 8790 s kontrolou skutečného datasetu prošly. První E2E z exportu znovu použilo již běžící server, proto nebylo vydáváno za nezávislý důkaz clean boot; ten byl následně ověřen na odděleném portu.
+- Dodatečný test ověřuje, že zahřátá cache při výpadku DB vrátí 503. Další dva testy kontrolují Windows-1250/neplatné UTF-8 a negativní volitelnou platnost/rozpor zaměstnání/špatná čísla termínu. Celkem 23 testů prošlo. Oprava AI: i nepovinné školení se zápornou deklarovanou platností musí mít problém, nikoli bezvýhradně přijaté null.
+- Uživatel výslovně zvolil zveřejnění zdrojů a minimalizovaného syntetického seedu. Před akcí zkontrolováno 66 historických blobů, bez nálezů cílených vzorů. gh repo edit a následné repo view potvrdily PUBLIC. Originální CSV nikdy nebyla přidána.
+- Aktualizována dříve plánovací formulace AGENTS.md podle skutečného schválení. README a jednostránkový Markdown odevzdávací text doplněny; nevytvářel se nevyžádaný PDF/DOCX ani další skill.
