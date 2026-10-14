@@ -1,6 +1,6 @@
 # Stav realizace
 
-Poslední aktualizace: 2026-10-14 11:31 Europe/Prague.
+Poslední aktualizace: 2026-10-14 11:40 Europe/Prague.
 
 ## Čas
 
@@ -28,9 +28,9 @@ Termín 12:20 Europe/Prague. V 09:44 bylo hotovo s rezervou 156 minut do termín
 
 ## Ověření a otevřené hranice
 
-32 unit/integration testů, typecheck a build prošly. Sedmnáct prohlížečových průchodů prošlo lokálně i veřejně, včetně přesné korektnosti filtrů a všech deseti školení. GitHub CI poslední aplikační revize úspěšné včetně čisté instalace, migrací, seedu a E2E. Dřívější nezávislé lokální spuštění čistého exportu i návrat datasetu jsou doloženy ve VERIFICATION.
+32 unit/integration testů, typecheck a build prošly. Dvacet jedna prohlížečových průchodů prošlo lokálně i veřejně, včetně filtrů všech deseti školení, stavových bublin, klávesnice, dotyku a nativního chování bez JS. GitHub CI poslední aplikační revize úspěšné včetně čisté instalace, migrací, seedu a E2E. Dřívější nezávislé lokální spuštění čistého exportu i návrat datasetu jsou doloženy ve VERIFICATION.
 
-Veřejně ověřená aplikační revize 0f329c2, dataset 8329fc51214bfc0b, Cloudflare version f768d6d0-0ef6-4b71-b81a-2a3a1dddb729. Následný dokumentační commit nemění běžící kód. Poslední HTTP smoke: audit medián/p95 130,7/157 ms; přehled 63,6/171,9 ms; návrh 67,1/97,1 ms. Vzorek zahrnuje síť a není SLA.
+Veřejně ověřená aplikační revize 30cbb46, dataset 8329fc51214bfc0b, Cloudflare version 84fc865b-d16d-46c4-b129-334ef4359771. Následný dokumentační commit nemění běžící kód. Poslední HTTP smoke: audit medián/p95 143,1/152,3 ms; přehled 156,5/334,7 ms; návrh 67,4/86,5 ms. Vzorek zahrnuje síť a není SLA.
 
 Předchozí CPU měření revize fb600f5 (nové nebylo provedeno): SQL audit první zachycený požadavek 12 ms CPU, další 2–8 ms. Zachycené špičky přehledu/plánovače 57/61 ms stále překračují 10 ms Free limit; vhodnost celé aplikace pro Free není potvrzena. Všech 32 zachycených runtime událostí bylo ok, tail neobsahuje všechny požadavky. Konkrétní billing tarif nelze s oprávněním ověřit (403); žádný tarif nebyl změněn. Podmínky měření a přejímka jsou ve VERIFICATION.
 
@@ -64,6 +64,6 @@ Osm nových scénářů chrání konkrétní ID/počty, všechny volby útvarů/
 Implementován výběr celého názvu/kódu školení, který omezuje graf, úkoly a seznam. 32 unit/integration testů, typy/build, 17 lokálních i veřejných E2E a čisté CI úspěšné. Nasazena revize 0f329c2. BOZP-Z referenčně 137/153 aktivních splněno, 9 prošlé a 7 chybí k 1. 10. 2026. Povinnost/nejistota odlišena od osob bez povinnosti.
 
 
-## Stavové bubliny (rozpracováno 11:37)
+## Stavové bubliny (hotovo 11:40)
 
-Implementován rychlý výpis celých názvů/kódů školení po najetí/focusu/klepnutí na stav v tabulce. Respektuje konkrétní školení, nad scrollovací tabulkou, Escape/outside dismiss. 20 lokálních E2E úspěšných; doplněn fallback bez JS, čeká závěrečný běh, commit a nasazení.
+Implementován rychlý výpis celých názvů/kódů školení po najetí/focusu/klepnutí na stav v tabulce. Respektuje konkrétní školení, nad scrollovací tabulkou, Escape/outside dismiss. 32 unit/integration testů, typy/build, 21 lokálních i veřejných E2E a čisté CI úspěšné. Nasazena revize 30cbb46; nativní kliknutí/Escape funguje i bez JS.
