@@ -1,0 +1,134 @@
+{
+  "files": {
+    "zamestnanci": {
+      "rows": 174,
+      "encoding": "utf-8-sig",
+      "delimiter": ",",
+      "exact_duplicate_rows": 0
+    },
+    "katalog_skoleni": {
+      "rows": 10,
+      "encoding": "utf-8-sig",
+      "delimiter": ",",
+      "exact_duplicate_rows": 0
+    },
+    "terminy_skoleni": {
+      "rows": 34,
+      "encoding": "utf-8-sig",
+      "delimiter": ";",
+      "exact_duplicate_rows": 0
+    },
+    "absolvovana_skoleni": {
+      "rows": 2868,
+      "encoding": "cp1250",
+      "delimiter": ";",
+      "exact_duplicate_rows": 7
+    }
+  },
+  "employees": {
+    "statuses": {
+      "aktivní": 156,
+      "ukončen": 12,
+      "rodičovská": 6
+    },
+    "departments": {
+      "Studijní oddělení": 20,
+      "Studijní": 1,
+      "": 5,
+      "Studijni oddeleni": 1,
+      "Ekonomické oddělení": 19,
+      "IT oddělení": 22,
+      "Knihovna": 21,
+      "Správa budov": 27,
+      "Sprava budov": 1,
+      "SPRÁVA BUDOV": 1,
+      "správa budov": 1,
+      "Laboratoře": 31,
+      "Laboratore": 3,
+      "Personální oddělení": 8,
+      "Personalni oddeleni": 1,
+      "VEDENÍ": 1,
+      "Vedení": 5,
+      "Marketing": 6
+    },
+    "duplicate_email_groups": 2,
+    "unknown_manager_rows": 4,
+    "start_after_reference": 3
+  },
+  "completions": {
+    "duplicate_ids": {
+      "Z000052": 2,
+      "Z000411": 2,
+      "Z000453": 2,
+      "Z000502": 2,
+      "Z000911": 2,
+      "Z001004": 2,
+      "Z001080": 2,
+      "Z001946": 2,
+      "Z002017": 2,
+      "Z002278": 2,
+      "Z002334": 2,
+      "Z002336": 2,
+      "Z002459": 2,
+      "Z002512": 2,
+      "Z002686": 2
+    },
+    "unknown_employee_ids": {
+      "": 2,
+      "E9006": 1,
+      "E9001": 1,
+      "id_zamestnance": 1,
+      "E9008": 1,
+      "E9009": 1,
+      "E9007": 1,
+      "E9004": 1,
+      "E9002": 1,
+      "E9003": 1,
+      "E9005": 1
+    },
+    "unknown_codes_after_trim_upper": {
+      "POZ_OCH": 2,
+      "BOZP Z": 1,
+      "": 2,
+      "POZ OCH": 2,
+      "KOD_SKOLENI": 1,
+      "GDPR-2": 1,
+      "BOZP_Z": 1,
+      "BOZP-X": 4,
+      "KYB3R": 1
+    },
+    "invalid_completion_dates": {
+      "43552": 1,
+      "": 2,
+      "44208": 1,
+      "45032": 1,
+      "datum_absolvovani": 1
+    },
+    "invalid_nonempty_expiry_dates": {
+      "44283": 1,
+      "44573": 1,
+      "45763": 1,
+      "platnost_do": 1
+    },
+    "missing_expiry": 49,
+    "future_completions": 5,
+    "completion_before_1950": 2,
+    "expiry_before_completion": 8
+  },
+  "sessions": {
+    "unknown_codes": [
+      "T010"
+    ],
+    "overbooked": [
+      "T016",
+      "T030"
+    ],
+    "zero_capacity": [
+      "T026"
+    ],
+    "cancelled": [
+      "T017",
+      "T028"
+    ]
+  }
+}
