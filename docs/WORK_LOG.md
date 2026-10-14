@@ -109,3 +109,11 @@ Pravidlo: zaznamenáváme významná rozhodnutí, důvody, ověření a oponentu
 - Doplněn počet osob se všemi aktuálně splněnými povinnostmi (včetně brzy končících); jednotlivé stavové karty nejsou celková míra splnění.
 - Oprava auditního počtu: stejná chyba data se zaznamenávala dvakrát (v parseru a v souhrnu řádku). Odstraněno 7 duplicitních událostí; aktuálně 4 427 událostí, dataset 239aef0a043c4b76. Počty osob, dokladů a termínů se nemění.
 - Vzdálená migrace a první staging syntetických dat úspěšné. Aktuální dataset po korekci bude nahrán a aktivován před plným deployem.
+
+### Veřejné ověření a korekce výkonu (09:31)
+
+- Plná verze 67eca86 publikována, Cloudflare version 7b109893-2934-4153-a6ad-37c685e14df2. První bezprostřední smoke vrátil starý scaffold, proto deploy nebyl označen za ověřený. Následný health a deployments list potvrdily aktivní revizi/dataset; opakovaný smoke prošel. Doplněno omezené čekání na obsahovou připravenost (45 s), ne maskování pozdějších chyb.
+- Veřejný smoke 12 sekvenčních požadavků/cestu: přehled medián 156,7 ms, p95 196,8 ms; filtr 140,2 / 159,8; detail 139,2 / 172,4; plán 137,9 / 140,8; audit 132,1 / 356,3. Časy zahrnují síť a celé tělo; serverový čas je samostatně v Server-Timing.
+- Tři veřejné Playwright průchody úspěšné. Desktop obsah viditelný za 485 ms. Simulace mobilu 390×844, 150 ms latence, 1,6 Mbps down / 0,6 Mbps up, 4× CPU, bez cache: LCP 436 ms. Jeden vzorek není produkční distribuce.
+- Doplňková runtime kontrola odhalila 44–74 ms CPU přes rychlý HTTP výsledek. Oficiální Workers Free limit je 10 ms, proto nelze tvrdit vhodnost pro tento tarif. Nastavení Workeru hlásí usage_model=standard, konkrétní billing plán nelze s OAuth oprávněním číst (403). Žádné placené služby ani tarif nebyly objednány/změněny.
+- Oprava: audit se načítá jen pro auditní stránku, neměnný dataset je možné znovu použít v paměti stejného Worker isolate. Aktivní pointer se vždy čte z DB, chyba DB stále vrací 503 a změna datasetu invaliduje cache. Lokální testy/E2E prošly, veřejné CPU se musí přeměřit.

@@ -16,7 +16,7 @@ app.use('*',async(c,next)=>{
  c.header('Server-Timing',`app;dur=${(performance.now()-started).toFixed(2)}`);
 });
 app.get('/health',async c=>{
- try {const data=await loadDataset(c.env.DB);return c.json({status:'ok',version:'0.2.0',revision:c.env.APP_REVISION??'development',dataset:data.meta.version,reference:data.meta.reference,employees:data.employees.length,courses:data.courses.length,completions:data.completions.length,sessions:data.sessions.length});}
+ try {const data=await loadDataset(c.env.DB,false);return c.json({status:'ok',version:'0.2.0',revision:c.env.APP_REVISION??'development',dataset:data.meta.version,reference:data.meta.reference,employees:data.employees.length,courses:data.courses.length,completions:data.completions.length,sessions:data.sessions.length});}
  catch{return c.json({status:'unavailable',version:'0.2.0',revision:c.env?.APP_REVISION??'development'},503);}
 });
 app.use('*',async(c,next)=>{
@@ -25,7 +25,7 @@ app.use('*',async(c,next)=>{
  if(c.req.url.length>2000)return c.text('Příliš dlouhý požadavek.',400);
  const page=c.req.query('page')??'1';
  if(!/^[1-9]\d{0,3}$/.test(page)||(c.req.query('q')??'').length>100)return c.html(view.layout('Neplatný vstup','<p>Neplatná stránka nebo příliš dlouhé vyhledávání.</p>',raw),400);
- c.set('date',raw);c.set('data',await loadDataset(c.env.DB));await next();
+ c.set('date',raw);c.set('data',await loadDataset(c.env.DB,c.req.path==='/quality'));await next();
 });
 app.get('/',c=>{
  const data=c.get('data'),date=c.get('date');const scope=c.req.query('scope')??'active',state=c.req.query('state')??'',department=c.req.query('department')??'';
