@@ -1,6 +1,6 @@
 # Ověření a praktická omezení
 
-Ověřeno 2026-10-14, macOS, Node 22.17, instalovaný Google Chrome; lokálně Wrangler/D1, vzdáleně Cloudflare Workers/D1. Syntetický dataset `239aef0a043c4b76`. HTTP smoke první verze MVP: revize `817535a`, Cloudflare verze `760b97c2-f8e0-4923-8cbc-8b62abdd920c`. Prohlížeč a runtime CPU byly měřeny na optimalizované revizi `2311d72`; finální změny nemění plánovací/doménový výpočet.
+Ověřeno 2026-10-14, macOS, Node 22.17, instalovaný Google Chrome; lokálně Wrangler/D1, vzdáleně Cloudflare Workers/D1. Výchozí syntetický dataset před opravou jmen `239aef0a043c4b76`; novější revize a dataset jsou uvedeny v poslední sekci. HTTP smoke první verze MVP: revize `817535a`, Cloudflare verze `760b97c2-f8e0-4923-8cbc-8b62abdd920c`. Prohlížeč a runtime CPU byly měřeny na optimalizované revizi `2311d72`; finální změny nemění plánovací/doménový výpočet.
 
 ## Funkční kontroly
 
@@ -83,3 +83,23 @@ Stejný omezený HTTP smoke (12 sekvenčních požadavků/cestu, první oddělen
 | `/quality?level=warning` | 72.1 | 162.6 | 102.0 |
 
 Veřejný desktopový obsah přehledu viditelný za 298 ms; simulovaný mobil LCP 380 ms při stejných podmínkách jako dříve. Jeden vzorek na režim. P95 přenosu návrhu 703,6 ms zahrnuje síť; jeho serverové p95 bylo 25 ms. Žádná chyba HTTP během smoke. Dosavadní CPU/Free omezení nadále platí; nové CPU měření se neprovádělo.
+
+## Auditovaná oprava formátu křestních jmen — 10:54
+
+Aktuální aplikace 1b38fb4, Cloudflare version 9acdf47e-385d-4671-840e-41c6661caa98, nový dataset 8329fc51214bfc0b. Opraveno šest křestních jmen podle explicitního seznamu; audit +6 událostí, nyní 4 433. Identity, všechny ostatní atributy osob, katalog, doklady a termíny beze změny; předchozí audit se pouze rozšířil. Plánování přesně shodné na třech referenčních datech, aktuální splnění stále 90/153 osob.
+
+Před vzdálenou aktivací exportována záloha D1 do ignorovaného lokálního artefaktu. Předchozí neměnný dataset 239aef0a043c4b76 zůstává uložen pro návrat pointeru. Originální CSV se nepřepisují.
+
+30 testů, typecheck, build a 6 lokálních i veřejných E2E prošly. Nový test ukazuje Lucie na detailu E0020 a dohledává auditní opravu se souborem a řádkem; import test chrání odlišná ID při stejném sjednoceném jméně, diakritiku i neobvyklé zápisy. [CI aplikačního commitu úspěšné](https://github.com/Mooore/muni-training-evidence/actions/runs/38537710754).
+
+Omezený veřejný smoke se stejnou metodikou:
+
+| Cesta | Medián celkem ms | p95 celkem ms | p95 server app ms |
+| --- | ---: | ---: | ---: |
+| `/` | 119 | 283 | 91.0 |
+| `/?department=Laborato%C5%99e` | 85 | 117.3 | 26.0 |
+| `/employees/E0001` | 74.1 | 108.6 | 23.0 |
+| `/planning` | 87.2 | 403.5 | 58.0 |
+| `/quality?level=warning` | 69.1 | 186.8 | 99.0 |
+
+Desktopový obsah přehledu viditelný za 274 ms, simulovaný mobil LCP 384 ms. Jednotlivé vzorky za stejných podmínek jako výše, nikoli SLA. Žádná chyba HTTP během smoke; předchozí CPU/Free omezení nadále platí.

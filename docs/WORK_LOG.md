@@ -179,3 +179,10 @@ Pravidlo: zaznamenáváme významná rozhodnutí, důvody, ověření a oponentu
 - Nový dataset 8329fc51214bfc0b, stále 174 osob, 10 školení, 2 860 dokladů, 34 termínů; audit 4 433 událostí (přidáno 6 oprav). Original CSV zůstávají beze změn mimo Git.
 - Porovnání před/po: změněno přesně šest name hodnot, ostatní atributy zaměstnanců, katalog, doklady a termíny identické. Předchozí audit beze změny po odfiltrování šesti nových oprav. Přiřazení na třech datech přesně shodná; souhrn nadále 90/153 splněno, 63 řešit/ověřit.
 - Lokální seed a aktivace nového datasetu proběhly; 30 testů, typecheck, build a 6 E2E prošly včetně zobrazení Lucie na E0020 a dohledání opravy v auditu. Veřejná záloha, aktivace a deployment ještě čekají.
+
+### Veřejné ověření opravy jmen (10:54)
+
+- Před vzdálenou změnou úspěšně exportována D1 do ignorovaného .artifacts/pre-name-normalization-20261014.sql. Staging a aktivace nového datasetu proběhly, předchozí dataset zůstává uložený.
+- Commit 1b38fb4 nasazen jako Cloudflare version 9acdf47e-385d-4671-840e-41c6661caa98. Veřejný smoke potvrzuje nový dataset 8329fc51214bfc0b, revizi a počty.
+- Šest veřejných E2E včetně jména Lucie a auditního záznamu opravy úspěšných; GitHub Actions run 38537710754 completed/success.
+- Změna je pouze formát jmen a přidaný audit, nezvyšuje/nepotvrzuje proškolení ani neslučuje osoby. Závěrečný dokumentační commit nemění běžící revizi.
