@@ -72,7 +72,7 @@ npx wrangler d1 execute DB --remote --file data/activate.sql
 npm run deploy
 ```
 
-`deploy` spouští typecheck, testy a build před publikací. Vloží revizi Git commitu; následný smoke ověřuje skutečný dataset, počty, revizi, reprezentativní stránky a hlavičky, nikoli jen HTTP 200. Skript odmítne nečistý pracovní strom před kontrolami i po buildu; revize musí odpovídat skutečným zdrojům. Výkonový smoke je omezený na 12 sekvenčních požadavků na pět cest, první odpověď odděluje od dalších.
+`deploy` spouští typecheck, testy a build před publikací. Vloží revizi Git commitu; následný smoke ověřuje skutečný dataset, počty, revizi, reprezentativní stránky a hlavičky, nikoli jen HTTP 200. Skript odmítne nečistý pracovní strom před kontrolami i po buildu; revize musí odpovídat skutečným zdrojům. Výkonový smoke je omezený na 12 sekvenčních požadavků na šest cest (audit první po lehkém health probe), první odpověď odděluje od dalších.
 
 Pokud již existuje ověřená verze kompatibilní se stejným datasetem, lze nastavit `ROLLBACK_VERSION=<Cloudflare-version-id> npm run deploy`. Při neúspěchu smoke se kód vrátí k této konkrétní verzi a smoke zopakuje; neúspěšný deploy se přesto hlásí jako chyba. Bez explicitní verze se nic naslepo nevrací. Manuálně: `npx wrangler rollback <version-id> --yes`.
 
