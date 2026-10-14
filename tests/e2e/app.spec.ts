@@ -9,7 +9,10 @@ test('overview, filtering, detail, proposal and unassigned reasons',async({page}
  await expect(page.getByText('BOZP-Z · povinné')).toBeVisible();
  await page.getByRole('link',{name:'Návrh přiřazení',exact:true}).click();await expect(page.getByText('Návrh není rezervace.',{exact:true})).toBeVisible();await expect(page.getByRole('heading',{name:'Nezařazené potřeby',exact:true})).toBeVisible();
  await expect(page.locator('#unassigned + p')).toContainText('neznamená důkaz');
- await expect(page.getByRole('heading',{name:'Jak se určuje priorita'})).toBeVisible();
+ await expect(page.getByText('Jak se určuje priorita',{exact:true})).toBeVisible();
+ await expect(page.getByRole('heading',{name:'Podrobný postup přiřazování'})).toBeHidden();
+ await page.getByText('Jak se určuje priorita',{exact:true}).click();
+ await expect(page.getByRole('heading',{name:'Podrobný postup přiřazování'})).toBeVisible();
  const proposals=page.getByRole('region',{name:'Navržená přiřazení',exact:true});
  await expect(proposals.getByRole('cell',{name:/BOZP – základní školení/}).first()).toBeVisible();
  await expect(proposals.locator('tbody tr').first()).toContainText(/#\d+/);
@@ -36,4 +39,23 @@ test('data review is explained and leads to the concrete missing information',as
  await expect(page.getByRole('combobox',{name:'Stav povinnosti',exact:true})).toHaveValue('uncertain');
  await page.locator('tbody th a').first().click();
  await expect(page.getByText('Chybí útvar zaměstnance.',{exact:false}).first()).toBeVisible();
+});
+
+test('dashboard tasks and progress lead to the correct people with visible active filters',async({page})=>{
+ await page.goto('/');
+ const progress=page.getByRole('progressbar',{name:'Zaměstnanci se všemi aktuálně splněnými povinnostmi'});
+ await expect(progress).toHaveAttribute('value','90');await expect(progress).toHaveAttribute('max','153');
+ await expect(page.getByRole('combobox',{name:'Způsobilost',exact:true})).toBeHidden();
+ await expect(page.getByText('Podrobné rozdělení stavů',{exact:true})).toBeVisible();
+ const expired=page.getByRole('article').filter({has:page.getByRole('heading',{name:'Obnovit prošlá školení',exact:true})});
+ await expect(expired).toContainText('21 osob · 39 povinností');await expired.getByRole('link',{name:'Zobrazit osoby'}).click();
+ await expect(page.getByRole('combobox',{name:'Stav povinnosti',exact:true})).toBeVisible();await expect(page.getByRole('combobox',{name:'Stav povinnosti',exact:true})).toHaveValue('expired');
+ await expect(page.getByRole('heading',{name:'Zaměstnanci 21 Prošlé'})).toBeVisible();
+ await expect(progress).toHaveAttribute('value','90');
+ await page.goto('/?department=Laborato%C5%99e');
+ const localTask=page.getByRole('article').filter({has:page.getByRole('heading',{name:'Obnovit prošlá školení',exact:true})});
+ await localTask.getByRole('link',{name:'Zobrazit osoby'}).click();
+ await expect(page.getByRole('combobox',{name:'Útvar',exact:true})).toHaveValue('Laboratoře');
+ await page.goto('/?q=nenalezeno-xyz');await expect(page.getByRole('progressbar')).toHaveCount(0);
+ await expect(page.getByText('Pro prázdný výběr nelze určit úkoly.',{exact:false})).toBeVisible();
 });

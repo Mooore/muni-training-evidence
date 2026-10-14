@@ -152,3 +152,14 @@ Pravidlo: zaznamenáváme významná rozhodnutí, důvody, ověření a oponentu
 - Čtyři veřejné E2E úspěšné: zahrnují názvy školení a pořadí i cestu „K ověření“ → detail s konkrétním chybějícím útvarem. GitHub CI run 38533480633 completed/success.
 - Návrh HTTP median/p95 77/114,2 ms; přehled 96/507,7 ms včetně přenosu, jeho serverové p95 302 ms. Desktop obsah 260 ms, simulovaný mobil LCP 364 ms. Metodika a omezení v VERIFICATION.md. Nové CPU měření neproběhlo, starší omezení Free se neodvolává.
 - Dokončovací dokumentační commit nemění nasazenou revizi. Přiřazovací pravidlo nezměněno a nezaměněno za nově schválenou obchodní prioritu.
+
+## 2026-10-14 — schválené zjednodušení přehledu (10:22–10:28)
+
+- Uživatel souhlasí s navrženým přehledem a výslovně žádá implementaci: graf aktuálního splnění, tři konkrétní pracovní výzvy, méně naléhavé obnovy do 60 dnů, podrobné rozdělení k rozbalení, jednoduché filtry a stručnější úvod plánovače.
+- Graf je nativní HTML progress bez knihovny/JavaScriptu a bez inline stylů blokovaných CSP. Počítá disjunktní skupiny osob: všechny známé povinnosti aktuálně splněny vs. řešit/ověřit. Expirující, ale ještě platné doklady plnění nesnižují; nejistá povinnost jej nepotvrzuje.
+- Výchozí aktivní snapshot: 90/153 splněno, 63 řešit/ověřit. Úkoly 21 osob / 39 prošlých povinností, 42 / 49 chybějících, 4 / 8 k ověření; obnovy 73 / 82. Osoby mezi úkoly se mohou překrývat, uživatelsky označeno.
+- Úkoly odkazují na filtrovaný seznam se zachováním data/útvaru/hledání/způsobilosti. Graf a úkoly vyhodnocují celý aktuální výběr, filtr stavu omezuje seznam; popis je viditelný. Upravené pokročilé filtry se automaticky otevřou.
+- Prázdný výběr nemá graf s falešným splněním ani tvrzení o absenci problémů. Podrobné počty jsou k rozbalení. V plánovači zůstává krátké shrnutí; plný algoritmus je k rozbalení.
+- 29 testů, typecheck, build a 5 lokálních E2E prošly. Nové testy ověřují unikátní osoby proti překryvům úkolů, nejisté/nepovinné povinnosti, skutečný snapshot, odkazy a zachování filtrů i prázdný výběr. Vizuálně zkontrolován desktop a mobil. Před publikací ještě dolaďujeme text vybraného rozsahu a skloňování počtů.
+
+- Dokončení lokálního ověření (10:30): popis vybraného rozsahu nad grafem a skloňování počtů doplněny; typecheck, 29 testů, build a 5 E2E úspěšné. Lokální browser timing 108 ms do viditelného obsahu, simulovaný mobil LCP 356 ms (jednotlivé vzorky, nikoli SLA). Připraveno ke commitu a veřejnému ověření.

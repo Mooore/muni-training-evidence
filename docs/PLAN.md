@@ -133,3 +133,7 @@ Aktuální stav je veden v docs/STATUS.md. Každý milník aktualizuje hotovo/ro
 ## Oponentura použitelnosti první verze — 2026-10-14
 
 Uživatel upozornil na nesrozumitelné zkratky a vysvětlení návrhu, nejasný pojem nejistoty a neviditelnou prioritu. Doplnění v rozsahu MVP: plné názvy školení, skutečné pořadí a rozhodné datum přiřazování, vysvětlení volby konkrétního termínu a akční vysvětlení „K ověření“. Dosavadní algoritmus se tím nemění; změna pravidla na jiné obchodní priority by byla další rozhodnutí.
+
+## Schválené zjednodušení přehledu — 2026-10-14
+
+Uživatel schválil implementaci: nad seznamem graf aktuálního splnění s unikátními osobami, tři úkoly (prošlé / chybějící / ověřit údaje) a méně naléhavé obnovy do 60 dnů. Pět podrobných stavových počtů k rozbalení. Ve filtrech viditelné hledání a útvar, ostatní pod „Další filtry“ s automatickým otevřením při aktivním omezení. V návrhu krátké shrnutí a podrobný algoritmus k rozbalení. Pořadí samotného plánovače se tím nemění.

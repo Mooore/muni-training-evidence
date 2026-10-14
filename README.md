@@ -32,7 +32,7 @@ Na macOS E2E standardně používají instalovaný Google Chrome; v CI používa
 
 ## Co aplikace řeší
 
-- Přehled s oddělenými počty osob a povinností, počet osob se všemi splněnými povinnostmi, filtry útvaru, ID/jména, způsobilosti a stavu.
+- Přehled s grafem aktuálního splnění (každá osoba jednou), konkrétními úkoly pro prošlá/chybějící školení a nejasné údaje, méně naléhavými obnovami do 60 dnů a odkazy do filtrovaného seznamu. Podrobné počty jsou k rozbalení. Hledání a útvar jsou viditelné, datum/způsobilost/stav pod dalšími filtry; aktivní omezení je automaticky otevřené.
 - Detail s pravidlem povinnosti, důvěryhodným dokladem, platností a varováním; historie zahrnuje i problematické doklady.
 - Audit oprav, odmítnutí a upozornění se zdrojovým ID a číslem logického CSV řádku.
 - Návrh pro 60 dnů: celé názvy školení, skutečné pořadí výpočtu a jeho datum, důvod potřeby a volby termínu, odečtená obsazenost, kolize napříč kurzy, způsobilost v den termínu a konkrétní důvody nezařazení.

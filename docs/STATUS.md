@@ -1,6 +1,6 @@
 # Stav realizace
 
-Poslední aktualizace: 2026-10-14 10:14 Europe/Prague.
+Poslední aktualizace: 2026-10-14 10:28 Europe/Prague.
 
 ## Čas
 
@@ -39,3 +39,7 @@ Vědomě vynecháno dle plánu: SSO/role, CRUD, skutečné rezervace, notifikace
 ## Zapracování uživatelské oponentury (hotovo 10:14)
 
 Nasazená a ověřená úprava srozumitelnosti: celé názvy školení, konkrétní pořadí a důvod termínu, vysvětlení „K ověření“ a odkazy na podklady. Pravidlo priority se nemění. Porovnání na třech datech zachovalo výsledky. 26 testů, build, 4 lokální i veřejné E2E a CI prošly. Na třech datech byla ověřena shoda rozhodnutí s předchozí verzí.
+
+## Schválené zjednodušení přehledu (10:28)
+
+Lokálně implementován graf splnění, konkrétní úkoly, rozbalovací podrobnosti a pokročilé filtry, stručnější úvod plánovače. 29 testů, build a 5 E2E prošly; dokončují se textové detaily, nová veřejná revize ještě čeká.
