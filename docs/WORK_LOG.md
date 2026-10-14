@@ -186,3 +186,12 @@ Pravidlo: zaznamenáváme významná rozhodnutí, důvody, ověření a oponentu
 - Commit 1b38fb4 nasazen jako Cloudflare version 9acdf47e-385d-4671-840e-41c6661caa98. Veřejný smoke potvrzuje nový dataset 8329fc51214bfc0b, revizi a počty.
 - Šest veřejných E2E včetně jména Lucie a auditního záznamu opravy úspěšných; GitHub Actions run 38537710754 completed/success.
 - Změna je pouze formát jmen a přidaný audit, nezvyšuje/nepotvrzuje proškolení ani neslučuje osoby. Závěrečný dokumentační commit nemění běžící revizi.
+
+## 2026-10-14 — optimalizace auditu a závěrečná přejímka (10:56–11:04)
+
+- Uživatel schválil pokračování: odlehčení auditu SQL filtrem/stránkováním, nové měření prvního a opakovaného načtení a dokončení přejímky dokumentace.
+- Nová auditní cesta čte aktivní metadata, malé SQL agregace, počet nalezených a nejvýše 30 payloadů s explicitním pořadím. Nevolá obecné načítání celého datasetu; údaje školení na ní nejsou závislostí. Hledání ID zachovává literální podřetězec, hodnoty jsou bind parametry. Filtr úrovně má nedestruktivní index.
+- Souhrn oprav/odmítnutí/varování a důvodů stále pokrývá celý dataset, počet nalezených a tabulka respektují filtry. Mimo rozsah stránky se přechází na poslední skutečnou stránku.
+- Health probe nyní čte metadata a SQL počty bez parsování tisíců payloadů. Nezaměňujeme jej za validaci každého obsahu: smoke stále otevírá reprezentativní stránky a E2E skutečný průchod.
+- 32 testů, typecheck, build a 7 lokálních E2E prošly. Nové testy porovnávají SQL výsledky s kompletním auditem, stabilitu stránek a globální souhrny, literální injekční/wildcard vstup, nezávislost auditu na vadném training payloadu a zachování 503 při výpadku DB. Skutečný lokální D1 index aplikován, migrace testů načítají všechny SQL soubory.
+- Runtime sumarizátor přidává pouze třídu routy a timestamp pro přiřazení CPU měření; neukládá query, employee ID, IP ani hlavičky. Syntetický test prokázal odstranění těchto hodnot. Veřejné CPU měření nové verze zatím čeká.

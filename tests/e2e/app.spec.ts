@@ -67,3 +67,17 @@ test('reimported name repair is visible and its source is auditable',async({page
  await expect(page.locator('tbody')).toContainText('Opraven zápis křestního jména');
  await expect(page.locator('tbody')).toContainText('zamestnanci');
 });
+
+test('audit page links retain filters and show the next bounded SQL page',async({page})=>{
+ await page.goto('/quality?level=repair');
+ const total=await page.getByText(/^Nalezeno \d+ událostí\.$/).textContent();
+ const first=await page.locator('tbody tr').first().textContent();
+ await expect(page.locator('tbody tr')).toHaveCount(30);
+ await page.getByRole('link',{name:'Další →',exact:true}).click();
+ await expect(page.getByRole('combobox',{name:'Typ události',exact:true})).toHaveValue('repair');
+ await expect(page.locator('tbody tr')).toHaveCount(30);
+ expect(await page.locator('tbody tr').first().textContent()).not.toBe(first);
+ await expect(page.getByText(total!,{exact:true})).toBeVisible();
+ await page.getByLabel('Zdrojové ID',{exact:true}).fill("%' OR 1=1 --");await page.getByRole('button',{name:'Filtrovat audit'}).click();
+ await expect(page.getByText('Nalezeno 0 událostí.',{exact:true})).toBeVisible();
+});

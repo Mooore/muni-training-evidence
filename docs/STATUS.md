@@ -1,6 +1,6 @@
 # Stav realizace
 
-Poslední aktualizace: 2026-10-14 10:54 Europe/Prague.
+Poslední aktualizace: 2026-10-14 11:04 Europe/Prague.
 
 ## Čas
 
@@ -47,3 +47,7 @@ Nasazen graf splnění s unikátními osobami (90/153), konkrétní úkoly, rozb
 ## Oprava caps-lock křestních jmen (hotovo 10:54)
 
 Veřejně ověřena auditovaná oprava šesti běžných křestních jmen včetně LUCIE → Lucie. Dataset 8329fc51214bfc0b, šest dodatečných oprav, stejná ID a všechny doménové výsledky. 30 testů, build, 6 lokálních i veřejných E2E a CI úspěšné. Před změnou exportována záloha D1 mimo Git; předchozí dataset je stále uložen pro návrat.
+
+## SQL audit a přejímka (11:04)
+
+Lokálně hotová nezávislá auditní cesta s SQL agregacemi, filtrováním a stránkou nejvýše 30 událostí; health bez parsování datasetu. 32 testů, build a 7 E2E úspěšné. Index aplikován lokálně. Dále: commit, nedestruktivní vzdálený index, deploy a veřejné CPU/HTTP měření, přejímka.

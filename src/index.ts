@@ -1,5 +1,5 @@
 import { Hono } from 'hono';
-import { loadDataset } from './repository';
+import { loadDataset,loadAuditPage,loadHealth } from './repository';
 import { overview } from './domain/evidence';
 import { plan } from './domain/planning';
 import { parseDate } from './domain/dates';
@@ -16,7 +16,7 @@ app.use('*',async(c,next)=>{
  c.header('Server-Timing',`app;dur=${(performance.now()-started).toFixed(2)}`);
 });
 app.get('/health',async c=>{
- try {const data=await loadDataset(c.env.DB,false);return c.json({status:'ok',version:'0.2.0',revision:c.env.APP_REVISION??'development',dataset:data.meta.version,reference:data.meta.reference,employees:data.employees.length,courses:data.courses.length,completions:data.completions.length,sessions:data.sessions.length});}
+ try {const health=await loadHealth(c.env.DB);return c.json({status:'ok',version:'0.2.0',revision:c.env.APP_REVISION??'development',...health});}
  catch{return c.json({status:'unavailable',version:'0.2.0',revision:c.env?.APP_REVISION??'development'},503);}
 });
 app.use('*',async(c,next)=>{
@@ -25,7 +25,7 @@ app.use('*',async(c,next)=>{
  if(c.req.url.length>2000)return c.text('Příliš dlouhý požadavek.',400);
  const page=c.req.query('page')??'1';
  if(!/^[1-9]\d{0,3}$/.test(page)||(c.req.query('q')??'').length>100)return c.html(view.layout('Neplatný vstup','<p>Neplatná stránka nebo příliš dlouhé vyhledávání.</p>',raw),400);
- c.set('date',raw);c.set('data',await loadDataset(c.env.DB,c.req.path==='/quality'));await next();
+ c.set('date',raw);if(c.req.path!=='/quality')c.set('data',await loadDataset(c.env.DB,false));await next();
 });
 app.get('/',c=>{
  const data=c.get('data'),date=c.get('date');const scope=c.req.query('scope')??'active',state=c.req.query('state')??'',department=c.req.query('department')??'';
@@ -39,7 +39,12 @@ app.get('/employees/:id',c=>{
  return c.html(view.layout(e.name,view.employeeDetail(data,e,overview(data,date).filter(o=>o.employee.id===e.id),date),date,data.meta.version));
 });
 app.get('/planning',c=>{const data=c.get('data'),date=c.get('date');try{return c.html(view.layout('Návrh přiřazení',view.planning(data,plan(data,date),date,Number(c.req.query('page')??1)),date,data.meta.version));}catch{return c.html(view.layout('Návrh se nepodařilo sestavit','<p>Žádná rezervace nebyla vytvořena. <a href="/planning">Zkusit znovu</a> nebo <a href="/">otevřít přehled</a>.</p>',date),503);}});
-app.get('/quality',c=>{const data=c.get('data'),date=c.get('date'),level=c.req.query('level')??'';if(!['','warning','reject','repair'].includes(level))return c.text('Neplatný typ události.',400);return c.html(view.layout('Kvalita dat',view.quality(data,date,Number(c.req.query('page')??1),c.req.query('q')??'',level),date,data.meta.version));});
+app.get('/quality',async c=>{
+ const date=c.get('date'),level=c.req.query('level')??'';
+ if(!['','warning','reject','repair'].includes(level))return c.text('Neplatný typ události.',400);
+ const audit=await loadAuditPage(c.env.DB,c.req.query('q')??'',level as ''|'warning'|'reject'|'repair',Number(c.req.query('page')??1));
+ return c.html(view.layout('Kvalita dat',view.quality(audit,date,c.req.query('q')??'',level),date,audit.meta.version));
+});
 app.get('/sessions',c=>{const data=c.get('data'),date=c.get('date');return c.html(view.layout('Termíny školení',view.sessionList(data,date),date,data.meta.version));});
 app.notFound(c=>c.html(view.layout('Stránka nenalezena','<p>Tato stránka neexistuje.</p><a href="/">Přehled</a>',c.get('date')??'2026-10-01'),404));
 app.onError((_err,c)=>c.html(view.layout('Data nyní nejsou dostupná','<p>Ověřený dataset nelze načíst. Nezobrazujeme neověřené počty ani stav splnění. <a href="/">Zkusit znovu</a>.</p>','2026-10-01'),503));

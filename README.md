@@ -45,7 +45,7 @@ Priorita: u chybějícího školení se pro řazení používá nástup, u proš
 
 ## Architektura a import
 
-TypeScript + Hono, serverové HTML bez klientského frameworku a aplikačního JavaScriptu, SCSS/Dart Sass, Cloudflare Workers a D1/SQLite. Doména v `src/domain/` nezávisí na Hono ani D1. `src/repository.ts` načítá data dávkově; SQL klíče mají indexy. Minimalizované entity jsou uloženy jako JSON payloady s relačními klíči, nikoli jako plně normalizovaný budoucí produkční model. HTTP poskytuje pouze čtení.
+TypeScript + Hono, serverové HTML bez klientského frameworku a aplikačního JavaScriptu, SCSS/Dart Sass, Cloudflare Workers a D1/SQLite. Doména v `src/domain/` nezávisí na Hono ani D1. `src/repository.ts` načítá data dávkově; SQL klíče mají indexy. Audit má samostatný read model: filtr, počty a stránkování se provádějí v SQL, do Workeru přijde nejvýše 30 událostí a malé agregace. Nevyžaduje načtení zaměstnanců/dokladů/termínů. `/health` kontroluje dostupnost aktivního datasetu a jeho počty; obsah a funkční průchod ověřují navazující smoke/E2E, nejde o kontrolu každého payloadu. Minimalizované entity jsou uloženy jako JSON payloady s relačními klíči, nikoli jako plně normalizovaný budoucí produkční model. HTTP poskytuje pouze čtení.
 
 Originální CSV zůstávají mimo Git. Běhová data neobsahují emaily, rodná čísla, volné poznámky ani poskytovatele. Jméno, útvar a pozice zůstávají syntetické. Parser respektuje citované oddělovače a víceřádkové buňky; absolvování čte jako Windows-1250 se středníkem, termíny UTF-8 se středníkem, ostatní UTF-8 s čárkou.
 
