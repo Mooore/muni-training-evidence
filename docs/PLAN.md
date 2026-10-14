@@ -141,3 +141,8 @@ Uživatel schválil implementaci: nad seznamem graf aktuálního splnění s uni
 ## Oprava formátu křestních jmen — 2026-10-14
 
 Po uživatelově upozornění na caps-lock „LUCIE“ je import doplněn explicitním seznamem šesti ověřených běžných křestních jmen se stejnou chybou. Opravy jsou auditované podle ID a zdrojového řádku. Nezavádí se globální title-case jmen, fuzzy opravy osob ani slučování podle výsledného jména. Originály se nepřepisují; vzniká nový neměnný minimalizovaný dataset.
+
+
+## Filtr konkrétního školení — 2026-10-14
+
+Uživatel požaduje ověřit, zda všichni mají například BOZP. Viditelný výběr školení podle názvu/kódu omezuje graf, úkoly, stavové počty a seznam osob na zvolený kurz. Pro kurz povinný jen části zaměstnanců se zobrazují osoby s povinností nebo nejasnou povinností; osoby bez povinnosti jsou samostatně vyčíslené a nezvyšují procento splnění. Kombinace s útvarem, datem, způsobilostí, hledáním a stavem zachovány. Plánovač se nemění.

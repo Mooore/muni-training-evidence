@@ -32,10 +32,12 @@ Na macOS E2E standardně používají instalovaný Google Chrome; v CI používa
 
 ## Co aplikace řeší
 
-- Přehled s grafem aktuálního splnění (každá osoba jednou), konkrétními úkoly pro prošlá/chybějící školení a nejasné údaje, méně naléhavými obnovami do 60 dnů a odkazy do filtrovaného seznamu. Podrobné počty jsou k rozbalení. Hledání a útvar jsou viditelné, datum/způsobilost/stav pod dalšími filtry; aktivní omezení je automaticky otevřené.
+- Přehled s grafem aktuálního splnění (každá osoba jednou), konkrétními úkoly pro prošlá/chybějící školení a nejasné údaje, méně naléhavými obnovami do 60 dnů a odkazy do filtrovaného seznamu. Podrobné počty jsou k rozbalení. Hledání, útvar a konkrétní školení (celý název i kód) jsou viditelné, datum/způsobilost/stav pod dalšími filtry; aktivní omezení je automaticky otevřené.
 - Detail s pravidlem povinnosti, důvěryhodným dokladem, platností a varováním; historie zahrnuje i problematické doklady.
 - Audit oprav, odmítnutí a upozornění se zdrojovým ID a číslem logického CSV řádku.
 - Návrh pro 60 dnů: celé názvy školení, skutečné pořadí výpočtu a jeho datum, důvod potřeby a volby termínu, odečtená obsazenost, kolize napříč kurzy, způsobilost v den termínu a konkrétní důvody nezařazení.
+
+Výběr školení omezuje graf, úkoly, stavové počty a seznam na tento kurz. Zahrnuje osoby s povinným kurzem nebo nejasnou povinností; počet osob, pro které kurz není povinný, se uvádí odděleně. Například `/?course=BOZP-Z` ukazuje základní BOZP. Stavový filtr se vztahuje jen na zvolený kurz.
 
 Jedna osoba může být v několika stavových kartách. Nepovinná školení nesnižují splnění. Den expirace je platný včetně; konec do 60 dnů je samostatný stav. „2 roky“ znamená 24 kalendářních měsíců, konec měsíce se ořízne; LEAD je jednorázové. Rozpor zdrojové expirace s katalogem je nejistota. Novější vadný doklad neruší starší důvěryhodný doklad, ale varování zůstává. Neznámý útvar může znamenat nejistou útvarovou povinnost. Identitou je výhradně ID zaměstnance.
 

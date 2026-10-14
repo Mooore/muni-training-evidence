@@ -219,3 +219,11 @@ Pravidlo: zaznamenáváme významná rozhodnutí, důvody, ověření a oponentu
 - Všech 15 veřejných E2E úspěšných (25,1 s), včetně nové sady filtrů. Orientační desktop obsah 404 ms, simulovaný mobil LCP 376 ms; jednotlivé vzorky za dosavadních podmínek, nikoli nové výkonové SLA. Změna nepotřebuje deploy aplikace, protože neobsahuje běhový kód.
 
 [CI testovacího commitu 40c3d0d](https://github.com/Mooore/muni-training-evidence/actions/runs/38542018773) úspěšné: čistá instalace, 32 unit/integration testů, typy/build, migrace/seed a všech 15 browser testů.
+
+
+## 2026-10-14 — filtr druhu školení (11:25–11:29)
+
+- Uživatel výslovně žádá filtr konkrétního školení, aby šlo zjistit například pokrytí BOZP. Doplněn viditelný select názvu/kódu a validace course proti katalogu; výběr zachovávají úkoly i stránkování, reset jej ruší.
+- Graf, souhrny, úkoly a řádkové stavy vycházejí jen z vybraného kurzu. Osoby bez povinnosti pro tento kurz nejsou započteny jako splněné, počet nezahrnutých je explicitní. Nejistá povinnost zůstává v jmenovateli a nepotvrzuje splnění. Nepovinné ANGL má prázdný graf s vysvětlením místo falešného 100 %.
+- Referenční výsledek BOZP-Z k 1. 10. 2026 mezi aktivními: 137/153 aktuálně splněno, z toho 2 končí do 60 dnů; 9 prošlých a 7 chybějících. Dataset, import a plánovací pravidla se nemění.
+- Dva nové browser scénáře ověřují všech deset kurzů, přesné osoby, čitatel/jmenovatel grafu, jen jeden kurz v řádkových počtech, nepovinné kurzy, průnik se všemi stavy v útvaru, úkoly, stránkování a reset. Mobilní Enter/reload nyní také obsahuje BOZP. 17 lokálních E2E úspěšných. Po zpřesnění přístupného názvu grafu čeká veřejné ověření.

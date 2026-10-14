@@ -8,14 +8,15 @@ import {eligibility,overview} from '../../src/domain/evidence';
 const data=JSON.parse(readFileSync('data/demo.json','utf8')) as Dataset;
 const reference=data.meta.reference;
 const states:State[]=['valid','expiring','expired','missing','uncertain'];
-type Selection={date?:string;scope?:string;department?:string;q?:string;state?:State|''};
+type Selection={date?:string;scope?:string;department?:string;q?:string;state?:State|'';course?:string};
 function expectedIds(f:Selection){
  const date=f.date??reference,obligations=overview(data,date);
  return data.employees.filter(e=>
   (!f.department||e.department===f.department)&&
   (!f.q||`${e.name} ${e.id}`.toLocaleLowerCase('cs').includes(f.q.toLocaleLowerCase('cs')))&&
   ((f.scope??'active')==='all'||eligibility(e,date)===(f.scope??'active'))&&
-  (!f.state||obligations.some(o=>o.employee.id===e.id&&o.required!==false&&o.state===f.state))
+  (!f.course||obligations.some(o=>o.employee.id===e.id&&o.course.code===f.course&&o.required!==false))&&
+  (!f.state||obligations.some(o=>o.employee.id===e.id&&o.required!==false&&(!f.course||o.course.code===f.course)&&o.state===f.state))
  ).map(e=>e.id);
 }
 async function submit(page:Page,f:Selection){
@@ -23,6 +24,7 @@ async function submit(page:Page,f:Selection){
  if(!await form.locator('details').evaluate(el=>(el as HTMLDetailsElement).open))await form.locator('summary').click();
  await form.getByLabel('Zaměstnanec',{exact:true}).fill(f.q??'');
  await form.getByRole('combobox',{name:'Útvar',exact:true}).selectOption(f.department??'');
+ await form.getByRole('combobox',{name:'Školení',exact:true}).selectOption(f.course??'');
  await form.getByLabel('Referenční datum',{exact:true}).fill(f.date??reference);
  await form.getByRole('combobox',{name:'Způsobilost',exact:true}).selectOption(f.scope??'active');
  await form.getByRole('combobox',{name:'Stav povinnosti',exact:true}).selectOption(f.state??'');
@@ -133,7 +135,7 @@ test('audit combines every event type with literal case insensitive ID search an
 });
 
 test('invalid filter URLs are rejected instead of silently showing unrelated results',async({page})=>{
- for(const path of ['/?scope=invalid','/?state=invalid','/?department=neexistuje','/?page=0','/?page=-1','/?page=1.5','/?date=2026-02-30','/?date=1949-12-31','/?q='+('x'.repeat(101)),'/quality?level=invalid','/quality?page=0']){
+ for(const path of ['/?course=invalid','/?scope=invalid','/?state=invalid','/?department=neexistuje','/?page=0','/?page=-1','/?page=1.5','/?date=2026-02-30','/?date=1949-12-31','/?q='+('x'.repeat(101)),'/quality?level=invalid','/quality?page=0']){
   const response=await page.goto(path);expect(response?.status(),path).toBe(400);
   await expect(page.locator('.employees-table')).toHaveCount(0);
  }
@@ -142,7 +144,7 @@ test('invalid filter URLs are rejected instead of silently showing unrelated res
 
 test('mobile filters submit with Enter and preserve a combined selection after reload',async({page})=>{
  await page.setViewportSize({width:390,height:844});await page.goto('/');
- const f={department:'Laboratoře',scope:'all',state:'expired' as const};
+ const f={department:'Laboratoře',scope:'all',state:'expired' as const,course:'BOZP-Z'};
  await submit(page,f);await assertEmployees(page,expectedIds(f));
  const q='E0';await page.getByLabel('Zaměstnanec',{exact:true}).fill(q);
  await page.getByLabel('Zaměstnanec',{exact:true}).press('Enter');
@@ -152,4 +154,43 @@ test('mobile filters submit with Enter and preserve a combined selection after r
  await expect(page.getByRole('combobox',{name:'Způsobilost',exact:true})).toHaveValue(f.scope);
  await expect(page.getByRole('combobox',{name:'Stav povinnosti',exact:true})).toHaveValue(f.state);
  expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);
+});
+
+
+test('every course limits the graph, counts and rows to applicable selected training',async({page})=>{
+ await page.goto('/');
+ const obligations=overview(data,reference);
+ for(const course of data.courses){
+  const f={course:course.code};await submit(page,f);
+  const ids=expectedIds(f),items=obligations.filter(o=>ids.includes(o.employee.id)&&o.course.code===course.code);
+  await assertEmployees(page,ids);
+  await expect(page.getByRole('combobox',{name:'Školení',exact:true})).toHaveValue(course.code);
+  await expect(page.locator('#completion-heading')).toHaveText(`${course.name} (${course.code})`);
+  if(ids.length){
+   const fulfilled=items.filter(o=>o.required===true&&['valid','expiring'].includes(o.state)).length;
+   await expect(page.getByRole('progressbar')).toHaveAttribute('value',String(fulfilled));
+   await expect(page.getByRole('progressbar')).toHaveAttribute('max',String(ids.length));
+   const rowBadges=await page.locator('.employees-table tbody .badges > span > strong').allTextContents();
+   expect(rowBadges).toEqual(ids.slice(0,20).map(()=>'1'));
+  }else{
+   await expect(page.getByRole('progressbar')).toHaveCount(0);
+   await expect(page.getByText(/pro \d+ osob není povinné/)).toBeVisible();
+  }
+ }
+});
+
+test('selected BOZP persists through task links, paging and reset; states belong to that course',async({page})=>{
+ await page.goto('/');const f={course:'BOZP-Z',scope:'all',q:'E0',date:reference};
+ await submit(page,f);await assertEmployees(page,expectedIds(f));
+ await page.getByRole('link',{name:'Další →',exact:true}).click();await assertEmployees(page,expectedIds(f),20);
+ expect(new URL(page.url()).searchParams.get('course')).toBe('BOZP-Z');
+ const task=page.getByRole('article').filter({has:page.getByRole('heading',{name:'Obnovit prošlá školení',exact:true})});
+ await task.getByRole('link',{name:'Zobrazit osoby'}).click();
+ await assertEmployees(page,expectedIds({...f,state:'expired'}));
+ for(const [key,value] of Object.entries(f))expect(new URL(page.url()).searchParams.get(key)).toBe(value);
+ await expect(page.getByRole('combobox',{name:'Školení',exact:true})).toHaveValue('BOZP-Z');
+ for(const state of states){await submit(page,{...f,department:'Laboratoře',state});await assertEmployees(page,expectedIds({...f,department:'Laboratoře',state}));}
+ await page.getByRole('link',{name:'Zrušit filtry',exact:true}).click();
+ await expect(page.getByRole('combobox',{name:'Školení',exact:true})).toHaveValue('');
+ await assertEmployees(page,expectedIds({date:reference}));
 });
