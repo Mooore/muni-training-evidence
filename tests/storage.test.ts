@@ -1,0 +1,14 @@
+import {expect,test} from 'vitest';
+import {DatabaseSync} from 'node:sqlite';
+import {readFileSync} from 'node:fs';
+import {loadDataset} from '../src/repository';
+import app from '../src/index';
+function storage(){const sqlite=new DatabaseSync(':memory:');sqlite.exec(readFileSync('migrations/0001_dataset.sql','utf8'));sqlite.exec(readFileSync('data/seed.sql','utf8'));sqlite.exec(readFileSync('data/activate.sql','utf8'));
+ const db={prepare(sql:string){return {bind(...args:unknown[]){return {first:async()=>sqlite.prepare(sql).get(...args as never[]),all:async()=>({results:sqlite.prepare(sql).all(...args as never[]),success:true})};},first:async()=>sqlite.prepare(sql).get()};},batch:async(statements:{all:()=>Promise<unknown>}[])=>Promise.all(statements.map(s=>s.all()))} as unknown as D1Database;
+ return {sqlite,db};}
+test('clean migration+seed loads representative route and escapes source text',async()=>{const {sqlite,db}=storage();try{const d=await loadDataset(db);expect(d.employees).toHaveLength(174);expect(d.completions).toHaveLength(2860);expect(d.courses).toHaveLength(10);const res=await app.request('/',{}, {DB:db});expect(res.status).toBe(200);expect(res.headers.get('content-security-policy')).toContain("default-src 'none'");expect(await res.text()).toContain('Přehled školení');const bad=await app.request('/?scope=invalid',{}, {DB:db});expect(bad.status).toBe(400);const attack=await app.request('/?q='+encodeURIComponent('<script>alert(1)</script>'),{}, {DB:db});const html=await attack.text();expect(html).not.toContain('<script>');expect(html).toContain('&lt;script&gt;');}finally{sqlite.close();}});
+test('partial staging cannot replace active dataset; prior dataset can be restored',async()=>{const {sqlite,db}=storage();try{const original=(await loadDataset(db)).meta.version;sqlite.prepare('INSERT INTO datasets VALUES (?, ?, ?, ?, 0)').run('incomplete','2026-10-01','test','test');const activation=readFileSync('data/activate.sql','utf8').replaceAll(original,'incomplete');sqlite.exec(activation);expect((await loadDataset(db)).meta.version).toBe(original);
+ // Rehearse an immutable new snapshot, then restore only the active pointer.
+ sqlite.prepare('INSERT INTO datasets VALUES (?, ?, ?, ?, 1)').run('rollback-rehearsal','2026-10-01','test','test');for(const table of ['employees','courses','completions','sessions','audit']){const cols=sqlite.prepare(`PRAGMA table_info(${table})`).all().map(c=>c.name as string);sqlite.prepare(`INSERT INTO ${table} SELECT ?,${cols.slice(1).join(',')} FROM ${table} WHERE dataset_id=?`).run('rollback-rehearsal',original);}
+ sqlite.exec("UPDATE active_dataset SET dataset_id='rollback-rehearsal'");expect((await loadDataset(db)).meta.version).toBe('rollback-rehearsal');sqlite.prepare('UPDATE active_dataset SET dataset_id=?').run(original);expect((await loadDataset(db)).meta.version).toBe(original);expect((await loadDataset(db)).employees).toHaveLength(174);
+ }finally{sqlite.close();}});

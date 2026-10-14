@@ -1,6 +1,6 @@
 # Stav realizace
 
-Poslední aktualizace: 2026-10-14 09:13 Europe/Prague.
+Poslední aktualizace: 2026-10-14 09:20 Europe/Prague.
 
 ## Čas
 
@@ -16,8 +16,8 @@ Uživatel upřesnil začátek přibližně 08:00 s přestávkami, konečný čas
 | 2. Minimální projekt a deploy | Hotovo pro základ | Veřejná URL odpovídá health obsahem; plné UI zatím nenasazeno |
 | 3. Import a databáze | Lokálně ověřeno | 174 osob, 10 kurzů, 2 860 dokladů, 34 termínů; staging + oddělená aktivace |
 | 4. Doména a testy | Základ ověřen | Import, platnost a způsobilost mají hraniční testy |
-| 5. UI a SCSS | Implementováno, ověřování čeká | Přehled, detail, audit, termíny |
-| 6. Plánovač | Implementován, unit testy prošly | Návrh, důvody, kapacita a kolize |
+| 5. UI a SCSS | Lokálně ověřeno (E2E) | Přehled, detail, audit, termíny |
+| 6. Plánovač | Lokálně ověřen včetně celé a 10× sady | Návrh, důvody, kapacita a kolize |
 | 7. Závěrečné ověření a odevzdání | Čeká | E2E, výkon, plný deploy, README, odevzdání |
 
 ## Teď a dále
@@ -28,4 +28,4 @@ Veřejný základ: https://muni-training-evidence.mirinda-posp.workers.dev (zat�
 
 ## Ověření
 
-18 automatických testů prošlo. Typecheck prošel. První scaffold dry-run build a deploy prošly, HTTP /health ověřen. Lokální migrace, seed i aktivace úspěšné. Prohlížeč, plný deployment a výkon ještě neověřeny.
+20 automatických testů a 2 E2E průchody prošly. Typecheck prošel. První scaffold dry-run build a deploy prošly, HTTP /health ověřen. Lokální migrace, seed i aktivace úspěšné. Lokální prohlížeč a výkon ověřeny. Plný veřejný deployment a výkon hostingu ještě čekají.

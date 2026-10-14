@@ -91,3 +91,21 @@ Pravidlo: zaznamenáváme významná rozhodnutí, důvody, ověření a oponentu
 - Lokální migrace a seed úspěšné. Oddělená aktivace datasetu kontroluje počty všech tabulek; částečný staging nenahradí aktivní dataset. D1 ukládá pouze minimalizované JSON payloady s indexovanými doménovými klíči.
 - Veřejný scaffold nasazen a ověřen /health s očekávanou verzí a deklarací not-imported. URL: https://muni-training-evidence.mirinda-posp.workers.dev. Plná aplikace zatím nenasazena.
 - 18 unit testů importu, domény, plánovače a bezpečného selhání prošlo. UI a plánovač jsou rozpracované, čekají na integrační/E2E ověření.
+
+### UI, plánovač a lokální ověření (09:20)
+
+- Přehled odděluje osoby od povinností, filtruje útvar/jméno/ID/způsobilost/stav; detail ukazuje pravidlo, poslední důvěryhodný doklad i problematické záznamy. Audit stránkovaný a filtrovatelný, přehled termínů.
+- Plánovač pracuje napříč kurzy, odečítá obsazenost, kontroluje intervalové kolize a způsobilost v den termínu. Deterministické pořadí, obnova nejpozději před expirací, opožděné řešení označené. Návrh nic nerezervuje.
+- 20 unit/integration testů, typecheck a build prošly; 2 Playwright průchody nad skutečným lokálním D1/Workerem prošly (filtr/detail/návrh/audit; mobil/klávesnice/prázdný/chybový stav). První E2E selhal na getByLabel exact pro select; role-based selektor opraven, aplikace se nevydávala za ověřenou před opakováním.
+- Lokální rollback datasetu nacvičen v SQLite integračním testu: neúplný staging aktivní data nenahradil, nová kopie aktivována a předchozí pointer úspěšně obnoven.
+- Lokální HTTP smoke: 12 sekvenčních požadavků na 5 cest; mediány 22,5–26,4 ms, nejvyšší malé-vzorkové p95 63,5 ms včetně přenosu. Nejde o produkční statistiku.
+- Doména 174 osob / 2 860 dokladů: přehled 12,4 ms, plán 4,5 ms; 10× deterministická sada: přehled 32,5 ms, plán 27,1 ms. Kapacita, duplicity, kolize, způsobilost a nezávislost na pořadí ověřeny na obou sadách.
+- GitHub CI scaffold i import commitů úspěšné. Doplněn E2E krok CI. Veřejná plná verze a výkon hostingu ještě čekají.
+- Nativní náhled v dostupném CUA nelze otevřít: prohlížeče iab/chrome nejsou dostupné. Automatický Playwright s instalovaným Chrome funguje; UI ověřujeme touto cestou.
+
+### Korekce při vizuální kontrole (09:22)
+
+- Screenshot mobilu ukázal, že stavy školení zůstávaly za okrajem posuvné tabulky. Přehled na mobilu převeden CSS na karty osob; ostatní široké tabulky mají fokusovatelný pojmenovaný posuvný region. E2E znovu prošly.
+- Doplněn počet osob se všemi aktuálně splněnými povinnostmi (včetně brzy končících); jednotlivé stavové karty nejsou celková míra splnění.
+- Oprava auditního počtu: stejná chyba data se zaznamenávala dvakrát (v parseru a v souhrnu řádku). Odstraněno 7 duplicitních událostí; aktuálně 4 427 událostí, dataset 239aef0a043c4b76. Počty osob, dokladů a termínů se nemění.
+- Vzdálená migrace a první staging syntetických dat úspěšné. Aktuální dataset po korekci bude nahrán a aktivován před plným deployem.

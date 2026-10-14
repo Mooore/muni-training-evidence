@@ -1,6 +1,6 @@
 {
   "name": "muni-training-evidence",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "private": true,
   "type": "module",
   "scripts": {
@@ -10,9 +10,12 @@
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
     "check": "npm run typecheck && npm test && npm run build",
-    "deploy": "npm run check && wrangler deploy",
+    "deploy": "node scripts/deploy.mjs",
     "db:local": "wrangler d1 migrations apply DB --local",
-    "import": "tsx scripts/import/run.ts"
+    "import": "tsx scripts/import/run.ts",
+    "test:e2e": "playwright test",
+    "seed:local": "wrangler d1 execute DB --local --file data/seed.sql > /tmp/muni-seed-local.log && wrangler d1 execute DB --local --file data/activate.sql",
+    "smoke": "node scripts/verify/smoke.mjs"
   },
   "dependencies": {
     "hono": "^4.10.0"

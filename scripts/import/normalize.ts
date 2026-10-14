@@ -22,7 +22,7 @@ export function normalize(input:Record<File,Row[]>,importedAt=new Date().toISOSt
  const note=(file:string,row:number,id:string,level:Audit['level'],reason:string)=>audit.push({file,row,id,level,reason});
  const code=(value:string,file:File,row:number,id:string)=>{const normalized=value.trim().toUpperCase(); const result=codes[normalized]??normalized;if(result!==value) note(file,row,id,'repair','Normalizován kód explicitním pravidlem.');return result;};
  const date=(value:string,file:File,row:number,id:string,issues:string[],label:string,optional=false)=>{
-  if(!value.trim() && optional) return null;const result=parseDate(value);if(!result){issues.push(`Neplatné ${label}.`);note(file,row,id,'warning',`Neplatné ${label}.`);}else if(result!==value) note(file,row,id,'repair',`Normalizováno ${label}; Excel serial používá systém 1900.`);return result;
+  if(!value.trim() && optional) return null;const result=parseDate(value);if(!result){issues.push(`Neplatné ${label}.`);}else if(result!==value) note(file,row,id,'repair',`Normalizováno ${label}; Excel serial používá systém 1900.`);return result;
  };
  const employees:Employee[]=input.zamestnanci.map((r,i)=>{
   const row=i+2,id=r.id_zamestnance.trim(),issues:string[]=[];
@@ -32,6 +32,7 @@ export function normalize(input:Record<File,Row[]>,importedAt=new Date().toISOSt
   if(end && start && end<start) issues.push('Ukončení před nástupem.');
   if(!['aktivní','ukončen','rodičovská'].includes(r.stav)) issues.push('Neznámý stav.');
   if(r.stav==='ukončen' && !end) issues.push('Ukončený zaměstnanec bez data ukončení.');
+  for(const reason of issues) note('zamestnanci',row,id,'warning',reason);
   return {id,name:`${r.jmeno.trim()} ${r.prijmeni.trim()}`,department,position:r.pozice.trim(),start,end,status:r.stav,issues};
  });
  if(employees.some(e=>!e.id) || new Set(employees.map(e=>e.id)).size!==employees.length) throw new Error('Chybějící nebo duplicitní ID zaměstnance; import zastaven.');
@@ -39,6 +40,7 @@ export function normalize(input:Record<File,Row[]>,importedAt=new Date().toISOSt
  if(r.platnost_mesicu==='2 roky') note('katalog_skoleni',i+2,id,'repair','2 roky interpretováno jako 24 kalendářních měsíců.');
  if(months===null && r.povinne_pro!=='NEPOVINNE') issues.push('Neznámá perioda povinného školení.');
  if(!/^(VSICHNI|NEPOVINNE|UTVAR:.+|POZICE:.+)$/.test(r.povinne_pro)) issues.push('Neznámé pravidlo povinnosti.');
+ for(const reason of issues) note('katalog_skoleni',i+2,id,'warning',reason);
  return {code:id,name:r.nazev,months,requirement:r.povinne_pro,issues};});
  if(courses.some(c=>!c.code) || new Set(courses.map(c=>c.code)).size!==courses.length) throw new Error('Nejednoznačný katalog.');
  const knownEmployees=new Set(employees.map(e=>e.id)),catalog=new Map(courses.map(c=>[c.code,c]));

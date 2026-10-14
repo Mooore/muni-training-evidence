@@ -1,0 +1,10 @@
+import {spawnSync} from 'node:child_process';
+import {mkdirSync} from 'node:fs';
+const run=(cmd,args,extra={})=>{const result=spawnSync(cmd,args,{stdio:'inherit',...extra});if(result.status!==0)throw Error(`${cmd} ${args.join(' ')} failed`);};
+const revision=spawnSync('git',['rev-parse','HEAD'],{encoding:'utf8'}).stdout.trim();
+if(!/^[a-f0-9]{40}$/.test(revision))throw Error('Cannot determine revision');
+run('npm',['run','check']);
+run('npx',['wrangler','deploy','--var',`APP_REVISION:${revision}`]);
+mkdirSync('.artifacts',{recursive:true});
+try{run('node',['scripts/verify/smoke.mjs','https://muni-training-evidence.mirinda-posp.workers.dev','.artifacts/remote-smoke.json'],{env:{...process.env,EXPECTED_REVISION:revision}});}
+catch(error){if(process.env.ROLLBACK_VERSION){console.error('Smoke failed; restoring explicitly supplied prior code version. Database pointer is unchanged.');run('npx',['wrangler','rollback',process.env.ROLLBACK_VERSION,'--yes']);run('node',['scripts/verify/smoke.mjs','https://muni-training-evidence.mirinda-posp.workers.dev','.artifacts/rollback-smoke.json']);}throw error;}

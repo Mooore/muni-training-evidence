@@ -18,4 +18,5 @@ const validation=`(SELECT COUNT(*) FROM employees WHERE dataset_id=${q(id)})=${d
 const activation=`UPDATE datasets SET validated=1 WHERE id=${q(id)} AND ${validation};\nINSERT INTO active_dataset(singleton,dataset_id) SELECT 1,id FROM datasets WHERE id=${q(id)} AND validated=1 ON CONFLICT(singleton) DO UPDATE SET dataset_id=excluded.dataset_id;\n`;
 await mkdir('data',{recursive:true});await writeFile('data/seed.sql',rows.join('\n')+'\n');await writeFile('data/activate.sql',activation);
 await writeFile('data/demo.json',JSON.stringify(data));
+await writeFile('data/manifest.json',JSON.stringify({id,reference:data.meta.reference,employees:data.employees.length,courses:data.courses.length,completions:data.completions.length,sessions:data.sessions.length,audit:data.audit.length},null,2)+'\n');
 console.log(JSON.stringify({dataset:id,employees:data.employees.length,courses:data.courses.length,completions:data.completions.length,sessions:data.sessions.length,audit:data.audit.length,output:resolve('data')},null,2));

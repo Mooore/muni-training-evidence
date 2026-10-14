@@ -11,3 +11,6 @@ jobs:
           cache: npm
       - run: npm ci
       - run: npm run check
+      - run: npx playwright install --with-deps chromium
+      - run: npm run db:local && npm run seed:local
+      - run: npm run test:e2e

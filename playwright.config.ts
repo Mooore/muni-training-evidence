@@ -1,0 +1,2 @@
+import {defineConfig} from '@playwright/test';
+export default defineConfig({testDir:'tests/e2e',fullyParallel:false,workers:1,use:{baseURL:process.env.BASE_URL??'http://localhost:8787',browserName:'chromium',launchOptions:process.env.CI?{}:{executablePath:'/Applications/Google Chrome.app/Contents/MacOS/Google Chrome'},trace:'retain-on-failure'},webServer:process.env.BASE_URL?undefined:{command:'npm run dev -- --port 8787',url:'http://localhost:8787/health',reuseExistingServer:!process.env.CI,timeout:30000},reporter:'list'});
