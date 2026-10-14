@@ -1,6 +1,6 @@
 # Stav realizace
 
-Poslední aktualizace: 2026-10-14 10:12 Europe/Prague.
+Poslední aktualizace: 2026-10-14 10:14 Europe/Prague.
 
 ## Čas
 
@@ -28,14 +28,14 @@ Termín 12:20 Europe/Prague. V 09:44 bylo hotovo s rezervou 156 minut do termín
 
 ## Ověření a otevřené hranice
 
-23 unit/integration testů prošlo, typecheck prošel. Tři prohlížečové průchody prošly lokálně i na veřejné optimalizované revizi. Čistá kopie: instalace, migrace, seed, tehdejších 20 testů, build i skutečné HTTP spuštění prošly. Dataset rollback nacvičen lokálně. GitHub CI finálního aplikačního commitu 817535a úspěšné včetně browser testů.
+26 unit/integration testů prošlo, typecheck prošel. Čtyři prohlížečové průchody prošly lokálně i na veřejné revizi po uživatelské oponentuře. Čistá kopie: instalace, migrace, seed, tehdejších 20 testů, build i skutečné HTTP spuštění prošly. Dataset rollback nacvičen lokálně. GitHub CI aplikačního commitu e831be3 úspěšné včetně browser testů.
 
-Veřejně ověřená finální aplikační revize 817535a, dataset 239aef0a043c4b76, Cloudflare version 760b97c2-f8e0-4923-8cbc-8b62abdd920c. Následný dokumentační commit nemění běžící kód. Všechny implementační milníky byly commitnuty a pushnuty. Poslední HTTP smoke: p95 celého přenosu 71,9–86,2 ms, malý vzorek.
+Veřejně ověřená aktuální aplikační revize e831be3, dataset 239aef0a043c4b76, Cloudflare version 1b667c2c-0d83-464e-87f8-93630bc1d0e4. Následný dokumentační commit nemění běžící kód. Všechny implementační milníky byly commitnuty a pushnuty. Poslední HTTP smoke po oponentuře: návrh medián/p95 celého přenosu 77/114,2 ms; přehled 96/507,7 ms (server p95 302 ms); malý vzorek.
 
 Výkonové cíle interakcí splněny v omezeném měření. CPU studeného auditu a některých požadavků překračuje 10 ms Free limit; vhodnost všech cest pro Workers Free není potvrzena. Aktuální hosting neměl runtime chyby, konkrétní billing tarif nelze s oprávněním ověřit (403); žádný tarif nebyl změněn. Nejde o produkční SLA.
 
 Vědomě vynecháno dle plánu: SSO/role, CRUD, skutečné rezervace, notifikace, exporty, optimální rozvrh. Automatický návrat kódu je připraven, jeho chybová větev nebyla na veřejném hostingu záměrně vyvolána. Žádná testovací/hostovací neznámá není vydávána za ověřenou.
 
-## Zapracování uživatelské oponentury (10:12)
+## Zapracování uživatelské oponentury (hotovo 10:14)
 
-Rozpracovaná úprava srozumitelnosti: celé názvy školení, konkrétní pořadí a důvod termínu, vysvětlení „K ověření“ a odkazy na podklady. Pravidlo priority se nemění. Porovnání na třech datech zachovalo výsledky. Lokálně 26 testů, build a 4 E2E prošly; nová veřejná revize a její CI ještě čekají.
+Nasazená a ověřená úprava srozumitelnosti: celé názvy školení, konkrétní pořadí a důvod termínu, vysvětlení „K ověření“ a odkazy na podklady. Pravidlo priority se nemění. Porovnání na třech datech zachovalo výsledky. 26 testů, build, 4 lokální i veřejné E2E a CI prošly. Na třech datech byla ověřena shoda rozhodnutí s předchozí verzí.

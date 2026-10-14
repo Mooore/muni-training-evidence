@@ -1,6 +1,6 @@
 # Ověření a praktická omezení
 
-Ověřeno 2026-10-14, macOS, Node 22.17, instalovaný Google Chrome; lokálně Wrangler/D1, vzdáleně Cloudflare Workers/D1. Syntetický dataset `239aef0a043c4b76`. Finální veřejný HTTP smoke: revize `817535a`, Cloudflare verze `760b97c2-f8e0-4923-8cbc-8b62abdd920c`. Prohlížeč a runtime CPU byly měřeny na optimalizované revizi `2311d72`; finální změny nemění plánovací/doménový výpočet.
+Ověřeno 2026-10-14, macOS, Node 22.17, instalovaný Google Chrome; lokálně Wrangler/D1, vzdáleně Cloudflare Workers/D1. Syntetický dataset `239aef0a043c4b76`. HTTP smoke první verze MVP: revize `817535a`, Cloudflare verze `760b97c2-f8e0-4923-8cbc-8b62abdd920c`. Prohlížeč a runtime CPU byly měřeny na optimalizované revizi `2311d72`; finální změny nemění plánovací/doménový výpočet.
 
 ## Funkční kontroly
 
@@ -47,3 +47,21 @@ Před optimalizací runtime tail ukázal 44–74 ms CPU. Po oddělení auditu a 
 Konkrétní běžící Worker má usage_model=standard a bez explicitního CPU limitu. Billing tarif se s dostupným OAuth oprávněním ověřit nepodařilo (403). Žádný tarif nebyl změněn ani objednán. Aktuální veřejný hosting požadavky obsloužil bez limitních chyb; to není garance chování na jiném/free účtu. Další optimalizací by bylo stránkování auditu přímo v SQL a omezení studeného načítání celého datasetu. Před produkcí nebo přesunem na Free nutno ověřit.
 
 Snapshot cache je pouze interní paměť stejného isolate. Aktivní pointer se vždy čte z DB; její výpadek vrací chybu a změna pointeru invaliduje snapshot. Veřejné odpovědi mají no-store. Runtime kontrola byla dočasná; sdílené výsledky obsahují jen časy, outcome a verzi, nikoli request IP/hlavičky.
+
+## Po uživatelské oponentuře — 10:14
+
+Aktuální aplikace e831be3, Cloudflare version 1b667c2c-0d83-464e-87f8-93630bc1d0e4, stejný dataset. Doplněny celé názvy školení, trace pořadí a volby termínu i konkrétní vysvětlení „K ověření“. Algoritmické rozhodování se nemění. Porovnání s předchozí verzí na třech datech potvrdilo stejné přiřazené a nezařazené dvojice (1. 10.: 148/66; 20. 10.: 189/67; 15. 11.: 178/92).
+
+26 testů, typecheck, produkční build a 4 lokální i veřejné E2E prošly. Nový průchod vede z vysvětlení k osobě s chybějícím útvarem. [CI aplikačního commitu úspěšné](https://github.com/Mooore/muni-training-evidence/actions/runs/38533480633). Vizuálně ověřen desktopový návrh.
+
+Stejná metodika omezeného HTTP smoke (12 sekvenčních požadavků na cestu, první odděleně):
+
+| Cesta | Medián celkem ms | p95 celkem ms | p95 server app ms | HTML bajtů |
+| --- | ---: | ---: | ---: | ---: |
+| `/` | 96 | 507.7 | 302.0 | 13754 |
+| `/?department=Laborato%C5%99e` | 73.7 | 183.9 | 94.0 | 13836 |
+| `/employees/E0001` | 71.2 | 78.2 | 23.0 | 9415 |
+| `/planning` | 77 | 114.2 | 22.0 | 141190 |
+| `/quality?level=warning` | 65.8 | 109.8 | 28.0 | 8759 |
+
+Desktopový obsah přehledu viditelný za 260 ms, simulovaný mobil LCP 364 ms při stejných podmínkách jako výše. Jeden vzorek na režim; nejde o SLA. Serverové p95 v tomto měření do 500 ms, u přehledu jeden celkový přenos 507,7 ms (samotný server 302 ms). Dřívější CPU/Free omezení nadále platí; nové měření CPU nebylo provedeno.

@@ -145,3 +145,10 @@ Pravidlo: zaznamenáváme významná rozhodnutí, důvody, ověření a oponentu
 - „K ověření“ dostalo vysvětlení na přehledu, návrhu i detailu, konkrétní chybějící údaj nebo ID/řádek problémového dokladu a odkaz na další krok. Počty ručního ověření jsou založené na kategorii, nikoli hledání slov v textu.
 - Porovnání proti předchozí implementaci na datech 2026-10-01, 2026-10-20 a 2026-11-15 potvrdilo shodné přiřazení i nezařazené dvojice osoba/kurz. Výchozí výsledek nadále 148 přiřazení a 66 nezařazených potřeb.
 - Před nasazením: 26 testů, typecheck, build a 4 lokální E2E prošly. Nové testy vysvětlují skutečné pořadí (včetně chybějícího staršího před prošlým), jeho shody, trace kolizí a konkrétní problémy dat. Vizuálně ověřen desktopový návrh; veřejný deploy nové revize ještě čeká.
+
+### Ověření zapracovaných připomínek (10:14)
+
+- Commit e831be3 pushnut, nasazen jako Cloudflare version 1b667c2c-0d83-464e-87f8-93630bc1d0e4. Předdeploy kontroly a veřejný obsahový smoke prošly.
+- Čtyři veřejné E2E úspěšné: zahrnují názvy školení a pořadí i cestu „K ověření“ → detail s konkrétním chybějícím útvarem. GitHub CI run 38533480633 completed/success.
+- Návrh HTTP median/p95 77/114,2 ms; přehled 96/507,7 ms včetně přenosu, jeho serverové p95 302 ms. Desktop obsah 260 ms, simulovaný mobil LCP 364 ms. Metodika a omezení v VERIFICATION.md. Nové CPU měření neproběhlo, starší omezení Free se neodvolává.
+- Dokončovací dokumentační commit nemění nasazenou revizi. Přiřazovací pravidlo nezměněno a nezaměněno za nově schválenou obchodní prioritu.

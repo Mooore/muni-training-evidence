@@ -35,9 +35,11 @@ Na macOS E2E standardně používají instalovaný Google Chrome; v CI používa
 - Přehled s oddělenými počty osob a povinností, počet osob se všemi splněnými povinnostmi, filtry útvaru, ID/jména, způsobilosti a stavu.
 - Detail s pravidlem povinnosti, důvěryhodným dokladem, platností a varováním; historie zahrnuje i problematické doklady.
 - Audit oprav, odmítnutí a upozornění se zdrojovým ID a číslem logického CSV řádku.
-- Návrh pro 60 dnů: odečtená obsazenost, kapacita, kolize napříč kurzy, způsobilost v den termínu, stabilní pořadí a konkrétní důvody nezařazení.
+- Návrh pro 60 dnů: celé názvy školení, skutečné pořadí výpočtu a jeho datum, důvod potřeby a volby termínu, odečtená obsazenost, kolize napříč kurzy, způsobilost v den termínu a konkrétní důvody nezařazení.
 
 Jedna osoba může být v několika stavových kartách. Nepovinná školení nesnižují splnění. Den expirace je platný včetně; konec do 60 dnů je samostatný stav. „2 roky“ znamená 24 kalendářních měsíců, konec měsíce se ořízne; LEAD je jednorázové. Rozpor zdrojové expirace s katalogem je nejistota. Novější vadný doklad neruší starší důvěryhodný doklad, ale varování zůstává. Neznámý útvar může znamenat nejistou útvarovou povinnost. Identitou je výhradně ID zaměstnance.
+
+Priorita: u chybějícího školení se pro řazení používá nástup, u prošlého či brzy končícího konec platnosti. Nejprve se zpracuje celé školení s nejstarším takovým datem mezi způsobilými potřebami (shoda podle kódu), v něm osoby od nejstaršího data (shoda podle ID). Chybějící školení s dávným nástupem tak může předběhnout nedávno prošlé; nejde o pravidlo „prošlé vždy první“. Nástup zde není potvrzená lhůta pro absolvování. V UI je dohledatelné konkrétní pořadí i rozhodné datum.
 
 **Návrh nic nerezervuje.** Existující účastníci nejsou identifikováni, proto nelze vyloučit již existující rezervaci. Heuristika není globálně optimální; nenalezení přiřazení není důkaz neexistence řešení. Rodičovská, budoucí nástup a nejasná způsobilost se automaticky neplánují. Opožděný termín neznamená souvislou platnost.
 
