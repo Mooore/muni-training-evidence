@@ -1,12 +1,12 @@
 # Ověření a praktická omezení
 
-Ověřeno 2026-10-14, macOS, Node 22.17, instalovaný Google Chrome; lokálně Wrangler/D1, vzdáleně Cloudflare Workers/D1. Syntetický dataset `239aef0a043c4b76`. Veřejný smoke a měření níže: revize `2311d72`, Cloudflare verze `59899514-3eb1-4486-a7ff-5742e3b81b25`.
+Ověřeno 2026-10-14, macOS, Node 22.17, instalovaný Google Chrome; lokálně Wrangler/D1, vzdáleně Cloudflare Workers/D1. Syntetický dataset `239aef0a043c4b76`. Finální veřejný HTTP smoke: revize `817535a`, Cloudflare verze `760b97c2-f8e0-4923-8cbc-8b62abdd920c`. Prohlížeč a runtime CPU byly měřeny na optimalizované revizi `2311d72`; finální změny nemění plánovací/doménový výpočet.
 
 ## Funkční kontroly
 
 - 23 unit/integration testů: CSV včetně citovaných a víceřádkových buněk, struktura, minimalizace, identity a konflikty, kalendářní měsíce a hranice platnosti, nejistota, způsobilost, kapacita, kolize, stabilita pořadí, SQL migrace+seed, escapování a validace requestů. Dodatečný test ověřuje, že ani zahřátá cache nezakryje výpadek DB.
 - 3 Playwright průchody lokálně i na veřejné URL: přehled → filtr → detail → návrh → nezařazené důvody → audit; mobil a klávesnice, prázdný/chybový stav; browser timing.
-- Typecheck a produkční build prošly. CI na GitHubu pro dosavadní implementační commity prošlo; konečný stav je uveden ve STATUS.md.
+- Typecheck a produkční build prošly. CI na GitHubu pro dosavadní implementační commity prošlo; [finální aplikační běh 817535a prošel](https://github.com/Mooore/muni-training-evidence/actions/runs/38530086768).
 - Čistý export Git revize `2311d72` do samostatného adresáře: npm ci, migrace, seed, testy, build i vlastní server na portu 8790 úspěšné. HTTP ověřil skutečný dataset a obsah. Nevychází z původních CSV nebo pracovního .wrangler. Čistý export obsahoval tehdejších 20 testů; tři dodatečné testy byly spuštěny v hlavní pracovní kopii.
 - Lokální dataset rollback nacvičen v integračním SQLite testu: neúplný staging nezměnil aktivní dataset; nová kopie aktivována a předchozí pointer obnoven. Chyba DB vrací 503 bez falešných nul.
 - Deployment gate kontroluje typy, testy a build; veřejný smoke kontroluje obsah, revizi, dataset a bezpečnostní hlavičky. První plný deploy dostal při okamžitém smoke ještě starou odpověď; po ověření propagace opakovaný smoke prošel. Skript nyní čeká na správný obsah nejvýše 45 sekund.
@@ -19,11 +19,11 @@ Ověřeno 2026-10-14, macOS, Node 22.17, instalovaný Google Chrome; lokálně W
 
 | Cesta | První celkem ms | Medián celkem ms | p95 celkem ms | p95 server app ms | HTML bajtů |
 | --- | ---: | ---: | ---: | ---: | ---: |
-| `/` | 180 | 181 | 378.1 | 285.0 | 13139 |
-| `/?department=Laborato%C5%99e` | 65.7 | 67.9 | 85.6 | 21.0 | 13206 |
-| `/employees/E0001` | 67.5 | 60.4 | 81.2 | 22.0 | 9160 |
-| `/planning` | 78.2 | 61.4 | 94.8 | 38.0 | 49796 |
-| `/quality?level=warning` | 154.5 | 57.5 | 151.5 | 97.0 | 8771 |
+| `/` | 85.4 | 67.3 | 86.2 | 22.0 | 13127 |
+| `/?department=Laborato%C5%99e` | 58.6 | 63.9 | 82.7 | 21.0 | 13194 |
+| `/employees/E0001` | 57.9 | 60.5 | 80.4 | 38.0 | 9148 |
+| `/planning` | 67.1 | 63.3 | 71.9 | 22.0 | 49784 |
+| `/quality?level=warning` | 151.5 | 57.6 | 79.4 | 20.0 | 8759 |
 
 Server app v Server-Timing zahrnuje čekání na DB a renderování; není to CPU time. Časy celkem zahrnují i síť. Vzorky byly bez HTTP chyb. Běžné cesty splnily navržený cíl serverového p95 do 500 ms v tomto měření.
 

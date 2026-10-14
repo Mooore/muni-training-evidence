@@ -126,3 +126,12 @@ Pravidlo: zaznamenáváme významná rozhodnutí, důvody, ověření a oponentu
 - Dodatečný test ověřuje, že zahřátá cache při výpadku DB vrátí 503. Další dva testy kontrolují Windows-1250/neplatné UTF-8 a negativní volitelnou platnost/rozpor zaměstnání/špatná čísla termínu. Celkem 23 testů prošlo. Oprava AI: i nepovinné školení se zápornou deklarovanou platností musí mít problém, nikoli bezvýhradně přijaté null.
 - Uživatel výslovně zvolil zveřejnění zdrojů a minimalizovaného syntetického seedu. Před akcí zkontrolováno 66 historických blobů, bez nálezů cílených vzorů. gh repo edit a následné repo view potvrdily PUBLIC. Originální CSV nikdy nebyla přidána.
 - Aktualizována dříve plánovací formulace AGENTS.md podle skutečného schválení. README a jednostránkový Markdown odevzdávací text doplněny; nevytvářel se nevyžádaný PDF/DOCX ani další skill.
+
+### Finální ověření a předání (09:44)
+
+- Aplikační commit 817535a pushnut a nasazen jako Cloudflare version 760b97c2-f8e0-4923-8cbc-8b62abdd920c. Předdeploy 23 testů, typy a build prošly, po deployi obsahový smoke s přesnou revizí/datasetem prošel.
+- Finální HTTP malý vzorek: přehled median/p95 67,3/86,2 ms; filtr 63,9/82,7; detail 60,5/80,4; plán 63,3/71,9; audit 57,6/79,4. Audit první 151,5 ms odděleně. Nejde o SLA nebo garanci cold startu.
+- GitHub Actions run 38530086768: completed/success, včetně E2E a čistého lokálního seedu. Anonymní GitHub API i raw README vracejí 200; zdroje jsou pro hodnotitele dostupné bez přihlášení.
+- Ručně ověřena ochrana deploye: nečistý strom odmítnut před publikací. U posledních dvou deployů byl uveden konkrétní předchozí ověřený version ID jako případný rollback; smoke prošel, návrat nebyl spuštěn.
+- V rozsahu MVP hotovo před 12:20. Zůstávají výslovné produkční výluky a CPU/Free omezení popsané v dokumentaci. Žádná neověřená billing informace nebo produkční garance se nevydává za fakt.
+- Závěrečný commit aktualizuje pouze dokumentaci výsledků; běžící aplikační revize zůstává 817535a.
