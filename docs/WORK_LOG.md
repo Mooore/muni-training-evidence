@@ -135,3 +135,13 @@ Pravidlo: zaznamenáváme významná rozhodnutí, důvody, ověření a oponentu
 - Ručně ověřena ochrana deploye: nečistý strom odmítnut před publikací. U posledních dvou deployů byl uveden konkrétní předchozí ověřený version ID jako případný rollback; smoke prošel, návrat nebyl spuštěn.
 - V rozsahu MVP hotovo před 12:20. Zůstávají výslovné produkční výluky a CPU/Free omezení popsané v dokumentaci. Žádná neověřená billing informace nebo produkční garance se nevydává za fakt.
 - Závěrečný commit aktualizuje pouze dokumentaci výsledků; běžící aplikační revize zůstává 817535a.
+
+## 2026-10-14 — uživatelská oponentura první verze (10:04–10:12)
+
+- Uživatel: zkratky školení v návrhu nejsou dost srozumitelné; požaduje lidské názvy. Nerozumí vysvětlení volby, výrazu „prověřit nejistotu“ ani prioritě heuristiky. Toto je skutečná lidská připomínka, nikoli AI oponentura.
+- Rozhodnutí AI v autorizovaném rozsahu: doplnit názvy do přiřazených i nezařazených potřeb; oddělit důvod potřeby, pořadí a důvod termínu. Pravidlo priority bez nového rozhodnutí uživatele neměnit.
+- Návrh nyní nese skutečné pořadí zpracování, pořadí školení/osoby, rozhodné datum a jeho původ (nástup/konec platnosti), kapacitu před přiřazením a přeskočené kandidáty kvůli kapacitě, kolizi či způsobilosti. Zobrazení nezaměňuje toto pořadí za globální bodové skóre naléhavosti.
+- Výslovně vysvětlen důsledek dosavadního pravidla: staré datum nástupu u chybějícího školení může mít přednost před nedávno prošlým školením; nejprve se zpracuje celý kurz. Nezavedena neodsouhlasená preference „prošlé vždy první“.
+- „K ověření“ dostalo vysvětlení na přehledu, návrhu i detailu, konkrétní chybějící údaj nebo ID/řádek problémového dokladu a odkaz na další krok. Počty ručního ověření jsou založené na kategorii, nikoli hledání slov v textu.
+- Porovnání proti předchozí implementaci na datech 2026-10-01, 2026-10-20 a 2026-11-15 potvrdilo shodné přiřazení i nezařazené dvojice osoba/kurz. Výchozí výsledek nadále 148 přiřazení a 66 nezařazených potřeb.
+- Před nasazením: 26 testů, typecheck, build a 4 lokální E2E prošly. Nové testy vysvětlují skutečné pořadí (včetně chybějícího staršího před prošlým), jeho shody, trace kolizí a konkrétní problémy dat. Vizuálně ověřen desktopový návrh; veřejný deploy nové revize ještě čeká.

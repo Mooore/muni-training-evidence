@@ -11,5 +11,5 @@ label { display:grid; gap:.35rem; font-size:.9rem; font-weight:600; } input,sele
 @media(max-width:600px) { header { padding:1rem; } nav { gap:.6rem 1rem; font-size:.9rem; } .filters { padding:.8rem; gap:.8rem; label { width:100%; } input,select { width:100%; } } th,td { padding:.7rem; } .metrics { grid-template-columns:repeat(2,minmax(0,1fr)); } table { min-width:640px; } .notice { font-size:.9rem; } }
 
 @media(max-width:600px) {
- .employees-table { min-width:0; display:block; thead { display:none; } tbody { display:block; } tr { display:block; border-bottom:2px solid var(--line); } th,td { display:block; width:100%; border:0; padding:.55rem .9rem; } th { background:#eaf0f6; } td::before { content:attr(data-label); display:block; color:var(--muted); font-size:.75rem; font-weight:650; margin-bottom:.15rem; } }
+ .employees-table, .proposal-table { min-width:0; display:block; thead { display:none; } tbody { display:block; } tr { display:block; border-bottom:2px solid var(--line); } th,td { display:block; width:100%; border:0; padding:.55rem .9rem; } th { background:#eaf0f6; } td::before { content:attr(data-label); display:block; color:var(--muted); font-size:.75rem; font-weight:650; margin-bottom:.15rem; } }
 }

@@ -23,9 +23,14 @@ export function assess(e:Employee,c:Course,records:Completion[],day:string):Obli
  const candidates=records.filter(x=>x.employeeId===e.id && x.code===c.code);
  const trusted=candidates.filter(x=>!x.issues.length && x.date && x.date<=day).sort((a,b)=>(b.date!).localeCompare(a.date!) || a.id.localeCompare(b.id));
  const completion=trusted[0]??null;
- if(candidates.some(x=>x.issues.length)) warnings.push('Existují problematické doklady; viz audit.');
+ for(const record of candidates.filter(x=>x.issues.length).sort((a,b)=>a.id.localeCompare(b.id)||a.sourceRow-b.sourceRow)) warnings.push(`Doklad ${record.id} (řádek ${record.sourceRow}): ${record.issues.join(' ')}`);
  if(candidates.some(x=>x.date && x.date>day)) warnings.push('Budoucí absolvování není dokončeným školením.');
- if(mandatory===null) warnings.push('Povinnost nelze spolehlivě určit.');
+ if(mandatory===null){
+  if(c.issues.length) warnings.push(...c.issues);
+  else if(c.requirement.startsWith('UTVAR:')&&!e.department) warnings.push('Chybí útvar zaměstnance. Doplňte jej, aby bylo možné určit, zda je toto školení povinné.');
+  else if(c.requirement.startsWith('POZICE:')&&!e.position) warnings.push('Chybí pracovní pozice. Doplňte ji, aby bylo možné určit povinnost školení.');
+  else warnings.push('Povinnost nelze určit podle pravidla v katalogu. Ověřte pravidlo školení.');
+ }
  if(completion?.derivedExpiry) warnings.push('Platnost dopočítána podle katalogu.');
  let state:Obligation['state'];const expiry=completion?.expiry??null;
  if(mandatory===null || c.issues.length) state='uncertain';

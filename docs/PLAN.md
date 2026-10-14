@@ -129,3 +129,7 @@ Uživatel výslovně požaduje rychlé interakce; několikasekundová odezva bě
 ## Průběžné sledování kroků a času
 
 Aktuální stav je veden v docs/STATUS.md. Každý milník aktualizuje hotovo/rozpracováno/dále, ověření, překážky a čas. Komunikace uživateli při změně kroku a nejméně jednou za minutu aktivní práce. Oddělovat naměřený čas od odhadu; nezapočítávat tichou pauzu automaticky jako osobně odpracovaný čas. Rozpočet nesmí být resetován začátkem implementace.
+
+## Oponentura použitelnosti první verze — 2026-10-14
+
+Uživatel upozornil na nesrozumitelné zkratky a vysvětlení návrhu, nejasný pojem nejistoty a neviditelnou prioritu. Doplnění v rozsahu MVP: plné názvy školení, skutečné pořadí a rozhodné datum přiřazování, vysvětlení volby konkrétního termínu a akční vysvětlení „K ověření“. Dosavadní algoritmus se tím nemění; změna pravidla na jiné obchodní priority by byla další rozhodnutí.

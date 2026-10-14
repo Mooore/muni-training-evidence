@@ -9,6 +9,13 @@ test('overview, filtering, detail, proposal and unassigned reasons',async({page}
  await expect(page.getByText('BOZP-Z · povinné')).toBeVisible();
  await page.getByRole('link',{name:'Návrh přiřazení',exact:true}).click();await expect(page.getByText('Návrh není rezervace.',{exact:true})).toBeVisible();await expect(page.getByRole('heading',{name:'Nezařazené potřeby',exact:true})).toBeVisible();
  await expect(page.locator('#unassigned + p')).toContainText('neznamená důkaz');
+ await expect(page.getByRole('heading',{name:'Jak se určuje priorita'})).toBeVisible();
+ const proposals=page.getByRole('region',{name:'Navržená přiřazení',exact:true});
+ await expect(proposals.getByRole('cell',{name:/BOZP – základní školení/}).first()).toBeVisible();
+ await expect(proposals.locator('tbody tr').first()).toContainText(/#\d+/);
+ await expect(proposals.locator('tbody tr').first()).toContainText('Volná místa před přiřazením:');
+ if(process.env.CAPTURE){await page.getByRole('heading',{name:'Navržená přiřazení',exact:true}).scrollIntoViewIfNeeded();await page.screenshot({path:'.artifacts/planning-explanation-desktop.png'});}
+
  await page.getByRole('link',{name:'Kvalita dat',exact:true}).click();await page.getByRole('combobox',{name:'Typ události',exact:true}).selectOption('warning');await page.getByRole('button',{name:'Filtrovat audit'}).click();await expect(page.locator('tbody')).toContainText('Upozornění');
 });
 test('mobile keyboard, empty and error states without document overflow',async({page})=>{
@@ -19,4 +26,14 @@ test('mobile keyboard, empty and error states without document overflow',async({
  await page.getByLabel('Zaměstnanec',{exact:true}).fill('nenalezeno-xyz');await page.getByRole('button',{name:'Filtrovat',exact:true}).click();await expect(page.getByText('Žádný zaměstnanec neodpovídá filtrům.')).toBeVisible();
  const bad=await page.goto('/?date=2026-02-30');expect(bad?.status()).toBe(400);await expect(page.getByRole('heading',{name:'Neplatný vstup'})).toBeVisible();
  const missing=await page.goto('/employees/no-such-id');expect(missing?.status()).toBe(404);await expect(page.getByRole('heading',{name:'Zaměstnanec nenalezen'})).toBeVisible();
+});
+
+test('data review is explained and leads to the concrete missing information',async({page})=>{
+ await page.goto('/planning');
+ await page.getByText('Co je potřeba nejprve ověřit?',{exact:true}).click();
+ await expect(page.getByText('Stav „K ověření“ znamená, že z dat nelze spolehlivě rozhodnout',{exact:false})).toBeVisible();
+ await page.getByRole('link',{name:'Zobrazit osoby se stavem K ověření',exact:true}).click();
+ await expect(page.getByRole('combobox',{name:'Stav povinnosti',exact:true})).toHaveValue('uncertain');
+ await page.locator('tbody th a').first().click();
+ await expect(page.getByText('Chybí útvar zaměstnance.',{exact:false}).first()).toBeVisible();
 });

@@ -1,6 +1,6 @@
 # Stav realizace
 
-Poslední aktualizace: 2026-10-14 09:44 Europe/Prague.
+Poslední aktualizace: 2026-10-14 10:12 Europe/Prague.
 
 ## Čas
 
@@ -35,3 +35,7 @@ Veřejně ověřená finální aplikační revize 817535a, dataset 239aef0a043c4
 Výkonové cíle interakcí splněny v omezeném měření. CPU studeného auditu a některých požadavků překračuje 10 ms Free limit; vhodnost všech cest pro Workers Free není potvrzena. Aktuální hosting neměl runtime chyby, konkrétní billing tarif nelze s oprávněním ověřit (403); žádný tarif nebyl změněn. Nejde o produkční SLA.
 
 Vědomě vynecháno dle plánu: SSO/role, CRUD, skutečné rezervace, notifikace, exporty, optimální rozvrh. Automatický návrat kódu je připraven, jeho chybová větev nebyla na veřejném hostingu záměrně vyvolána. Žádná testovací/hostovací neznámá není vydávána za ověřenou.
+
+## Zapracování uživatelské oponentury (10:12)
+
+Rozpracovaná úprava srozumitelnosti: celé názvy školení, konkrétní pořadí a důvod termínu, vysvětlení „K ověření“ a odkazy na podklady. Pravidlo priority se nemění. Porovnání na třech datech zachovalo výsledky. Lokálně 26 testů, build a 4 E2E prošly; nová veřejná revize a její CI ještě čekají.
