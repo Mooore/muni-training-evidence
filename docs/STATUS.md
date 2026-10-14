@@ -1,6 +1,6 @@
 # Stav realizace
 
-Poslední aktualizace: 2026-10-14 11:23 Europe/Prague.
+Poslední aktualizace: 2026-10-14 11:31 Europe/Prague.
 
 ## Čas
 
@@ -28,11 +28,11 @@ Termín 12:20 Europe/Prague. V 09:44 bylo hotovo s rezervou 156 minut do termín
 
 ## Ověření a otevřené hranice
 
-32 unit/integration testů, typecheck a build prošly. Patnáct prohlížečových průchodů prošlo lokálně i veřejně, včetně osmi nových scénářů přesné korektnosti filtrů. GitHub CI poslední aplikační revize úspěšné včetně čisté instalace, migrací, seedu a E2E. Dřívější nezávislé lokální spuštění čistého exportu i návrat datasetu jsou doloženy ve VERIFICATION.
+32 unit/integration testů, typecheck a build prošly. Sedmnáct prohlížečových průchodů prošlo lokálně i veřejně, včetně přesné korektnosti filtrů a všech deseti školení. GitHub CI poslední aplikační revize úspěšné včetně čisté instalace, migrací, seedu a E2E. Dřívější nezávislé lokální spuštění čistého exportu i návrat datasetu jsou doloženy ve VERIFICATION.
 
-Veřejně ověřená aplikační revize fb600f5, dataset 8329fc51214bfc0b, Cloudflare version 8e826edf-e3ea-47d9-b857-713b2fe4d4a4. Následný dokumentační commit nemění běžící kód. Poslední HTTP smoke: audit medián/p95 155,5/198,1 ms; přehled 89,9/131,4 ms; návrh 90,2/102,9 ms. Vzorek zahrnuje síť a není SLA.
+Veřejně ověřená aplikační revize 0f329c2, dataset 8329fc51214bfc0b, Cloudflare version f768d6d0-0ef6-4b71-b81a-2a3a1dddb729. Následný dokumentační commit nemění běžící kód. Poslední HTTP smoke: audit medián/p95 130,7/157 ms; přehled 63,6/171,9 ms; návrh 67,1/97,1 ms. Vzorek zahrnuje síť a není SLA.
 
-SQL audit: první zachycený požadavek 12 ms CPU, další 2–8 ms. Zachycené špičky přehledu/plánovače 57/61 ms stále překračují 10 ms Free limit; vhodnost celé aplikace pro Free není potvrzena. Všech 32 zachycených runtime událostí bylo ok, tail neobsahuje všechny požadavky. Konkrétní billing tarif nelze s oprávněním ověřit (403); žádný tarif nebyl změněn. Podmínky měření a přejímka jsou ve VERIFICATION.
+Předchozí CPU měření revize fb600f5 (nové nebylo provedeno): SQL audit první zachycený požadavek 12 ms CPU, další 2–8 ms. Zachycené špičky přehledu/plánovače 57/61 ms stále překračují 10 ms Free limit; vhodnost celé aplikace pro Free není potvrzena. Všech 32 zachycených runtime událostí bylo ok, tail neobsahuje všechny požadavky. Konkrétní billing tarif nelze s oprávněním ověřit (403); žádný tarif nebyl změněn. Podmínky měření a přejímka jsou ve VERIFICATION.
 
 Vědomě vynecháno dle plánu: SSO/role, CRUD, skutečné rezervace, notifikace, exporty, optimální rozvrh. Automatický návrat kódu je připraven, jeho chybová větev nebyla na veřejném hostingu záměrně vyvolána. Žádná testovací/hostovací neznámá není vydávána za ověřenou.
 
@@ -59,6 +59,6 @@ Osm nových scénářů chrání konkrétní ID/počty, všechny volby útvarů/
 [CI testovacího commitu 40c3d0d](https://github.com/Mooore/muni-training-evidence/actions/runs/38542018773) úspěšné: čistá instalace, 32 unit/integration testů, typy/build, migrace/seed a všech 15 browser testů.
 
 
-## Filtr školení (rozpracováno 11:29)
+## Filtr školení (hotovo 11:31)
 
-Implementován výběr celého názvu/kódu školení, který omezuje graf, úkoly a seznam. 17 lokálních E2E úspěšných; čeká commit, nasazení a veřejné ověření. BOZP-Z referenčně 137/153 aktivních splněno, 9 prošlé a 7 chybí k 1. 10. 2026. Povinnost/nejistota odlišena od osob bez povinnosti.
+Implementován výběr celého názvu/kódu školení, který omezuje graf, úkoly a seznam. 32 unit/integration testů, typy/build, 17 lokálních i veřejných E2E a čisté CI úspěšné. Nasazena revize 0f329c2. BOZP-Z referenčně 137/153 aktivních splněno, 9 prošlé a 7 chybí k 1. 10. 2026. Povinnost/nejistota odlišena od osob bez povinnosti.

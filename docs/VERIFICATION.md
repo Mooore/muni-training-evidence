@@ -138,3 +138,12 @@ V tomto rozsahu se aplikační chyba neprokázala. Výslovně chráněno stávaj
 Všech 15 veřejných E2E rovněž úspěšných (25,1 s). Orientačně desktop obsah 404 ms, simulovaný mobil LCP 376 ms za dosavadních podmínek, jednotlivé vzorky. Změna přidává testy/dokumentaci a nevyžaduje nové nasazení běhového kódu.
 
 [CI testovacího commitu 40c3d0d](https://github.com/Mooore/muni-training-evidence/actions/runs/38542018773) úspěšné: čistá instalace, 32 unit/integration testů, typy/build, migrace/seed a všech 15 browser testů.
+
+
+## Filtr konkrétního školení (11:31)
+
+Aplikační revize `0f329c2`, Cloudflare verze `f768d6d0-0ef6-4b71-b81a-2a3a1dddb729`, dataset beze změny. Viditelný výběr názvu/kódu omezuje graf, úkoly, počty i řádkové stavy na zvolený kurz. Osoby bez povinnosti se uvádějí odděleně a nepočítají se jako proškolené; nejistá povinnost se nezamlčuje. Filtr se zachovává v úkolech/stránkování, reset jej zruší a neznámý kurz vrací 400.
+
+32 unit/integration testů, typy/build a všech 17 lokálních i veřejných E2E prošlo. [Čisté CI této revize](https://github.com/Mooore/muni-training-evidence/actions/runs/38542616573) success. Nové scénáře porovnávají konkrétní ID a přesný čitatel/jmenovatel pro všech deset kurzů, nepovinné ANGL bez falešného 100 %, průnik BOZP se všemi stavy v útvaru, úkoly, stránkování, reset a mobilní Enter/reload. BOZP-Z k 1. 10. 2026: 137/153 aktivních splněno (včetně 2 obnov do 60 dnů), 9 prošlé, 7 chybí.
+
+Deploy smoke šest cest × 12 bez HTTP chyb: audit median/p95 130,7/157 ms, přehled 63,6/171,9 ms, plán 67,1/97,1 ms. První přehled 195,7 ms; malý vzorek zahrnuje síť a není SLA. Veřejný desktop obsah 253 ms, simulovaný mobil LCP 372 ms, jednotlivé vzorky za stejných podmínek jako dříve. Nové CPU měření neproběhlo; dosavadní Free omezení se neodvolává. Databáze a plánovací algoritmus se nemění.
