@@ -72,3 +72,8 @@ Implementován rychlý výpis celých názvů/kódů školení po najetí/focusu
 ## Multiselect stavů a průjezd mezi řádky (hotovo 11:50)
 
 Implementována OR checkbox skupina a zkratka „Vše kromě Platné“ s filtrem školení, opakované state URL parametry. Bublina vlevo od stavového sloupce, odstraněn dashed border/hover fill. 32 testů, typy/build, 25 lokálních i veřejných E2E a čisté CI úspěšné. Nasazena revize eb4ea9f.
+
+
+## Závěrečné doladění a uzavření (rozpracováno 11:52)
+
+Reset filtrů má vzhled sekundárního tlačítka vedle hlavní akce. Zachováno chování odkazu i resetu. Čeká finální ověření, nasazení a zaznamenání uzavření MVP.

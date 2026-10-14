@@ -21,7 +21,7 @@ label { display:grid; gap:.35rem; font-size:.9rem; font-weight:600; } input,sele
 .task { background:white; border:1px solid var(--line); border-left:4px solid #9a6100; border-radius:var(--radius); padding:1rem 1.2rem; display:flex; flex-direction:column; h3 { font-size:1.05rem; line-height:1.4; margin:0 0 .6rem; } p { margin:.3rem 0 .65rem; } .task-count strong { font-size:1.5rem; } a { margin-top:auto; font-weight:650; } &.task-expired { border-left-color:#a3322b; } &.task-uncertain { border-left-color:#72439e; } }
 .renewal-task { display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:1rem; padding:1rem 1.2rem; border:1px solid #e2d8ba; background:#fbf7eb; border-radius:var(--radius); span { display:block; color:var(--muted); font-size:.9rem; } }
 .overview-details,.planning-explanation { border:1px solid var(--line); border-radius:var(--radius); background:white; padding:1rem 1.2rem; }
-.search-filters { display:block; .filter-main,.advanced-fields { display:flex; align-items:end; flex-wrap:wrap; gap:1rem; } .filter-main > label { flex:1; min-width:12rem; } details { margin:1rem 0 0; } .advanced-fields { padding-top:1rem; } }
+.search-filters { display:block; .filter-main,.advanced-fields { display:flex; align-items:end; flex-wrap:wrap; gap:1rem; } .filter-main > label { flex:1; min-width:12rem; input,select { width:100%; min-width:0; } } details { margin:1rem 0 0; } .advanced-fields { padding-top:1rem; } }
 @media(max-width:700px) { .tasks { grid-template-columns:1fr; } .completion-summary { padding:1rem; } .task { padding:1rem; } .search-filters .filter-main > label { min-width:0; flex-basis:100%; } }
 
 .training-trigger { display:inline-flex; align-items:center; gap:.35rem; min-height:2.75rem; padding:.2rem .35rem; background:transparent; border:0; color:var(--ink); font-size:inherit; &:hover { background:transparent; } }
@@ -31,3 +31,6 @@ label { display:grid; gap:.35rem; font-size:.9rem; font-weight:600; } input,sele
 .state-options,.state-shortcuts { display:flex; flex-wrap:wrap; gap:.7rem 1.25rem; }
 .state-options label { display:flex; align-items:center; gap:.4rem; width:auto; min-height:2.75rem; input { min-height:0; width:1.1rem; height:1.1rem; margin:0; padding:0; accent-color:var(--blue); } }
 .state-shortcuts { margin-top:.6rem; font-size:.9rem; }
+
+.filter-actions { display:flex; align-items:stretch; flex-wrap:wrap; gap:.6rem; }
+.button-secondary { display:inline-flex; align-items:center; justify-content:center; gap:.45rem; min-height:2.75rem; padding:.5rem 1rem; border:1px solid #8998a8; border-radius:.3rem; background:var(--bg); color:var(--ink); font-weight:600; text-decoration:none; white-space:nowrap; span { font-size:1.25rem; line-height:1; } &:hover { background:#eaf0f6; border-color:var(--blue); } }

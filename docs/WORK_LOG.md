@@ -253,3 +253,10 @@ Pravidlo: zaznamenáváme významná rozhodnutí, důvody, ověření a oponentu
 
 - Nasazena revize eb4ea9f, Cloudflare version 980c252b-9243-4830-9296-1d936a62c2cd; gate a obsahový smoke success. Celá veřejná sada 25 E2E úspěšná (57,9 s), GitHub čisté CI 38544956905 success.
 - Přehled HTTP první 175,4 ms, median/p95 65,8/75,2 ms; plán 68,3/144,9 ms. Desktop browser obsah 665 ms/TTFB 507 ms, simulovaný mobil LCP 404 ms. Malé vzorky včetně sítě, CPU znovu neměřeno. Aktualizovány stav/ověření/odevzdání, iterace hotová 11:50 před termínem; dataset a doménová pravidla beze změny.
+
+
+## 2026-10-14 — sekundární akce resetu a uzavření (11:52)
+
+- Uživatel žádá graficky zlepšit prostý odkaz „Zrušit filtry“ a směřovat úkol k uzavření. Reset má vzhled decentního sekundárního tlačítka s ikonou obnovy, stejnou výškou jako Filtrovat a společnou skupinou akcí; zachována sémantika navigačního odkazu, přístupný název, focus a původní zachování referenčního data.
+- Nepřidávají se kosmetické unit testy; existující browser scénáře již ověřují reset všech filtrů i multiselectu. Následuje jejich běh s desktop/mobil screenshoty, nasazení, veřejné ověření a uzavření dokumentace. Žádné nové funkce ani služby.
+- 32 testů, typy/build a 25 lokálních E2E prošly. Vizuální kontrola zachytila přetékání dlouhého selectu školení do seskupených akcí na desktopu; doplněna explicitní šířka/min-width v rámci labelu. Opakuje se cílený screenshot, reset zůstává ověřen existující sadou.
