@@ -1,6 +1,6 @@
-# Návrh k diskusi — evidence školení
+# Schválený plán — evidence školení
 
-Stav: návrh, neodsouhlasená implementace. Referenční datum exportu: 2026-10-01.
+Stav: uživatel schválil plán a autorizoval implementaci i průběžné commity dne 2026-10-14. Referenční datum exportu: 2026-10-01.
 
 ## Výsledek MVP
 
@@ -112,3 +112,20 @@ Minimum komponent: tlačítko/odkaz, označený input/select, stavový badge, in
 - Rollback kódu nevrací automaticky databázi. Pro MVP nedestruktivní migrace kompatibilní s předchozí verzí a před změnou dat export/záloha. Obnovu dat provádět cíleně, ne slepým automatickým rollbackem. Jednou lokálně nacvičit návrat k předchozímu datasetu/verzi, pokud již existují.
 
 Časová priorita: import, doména a kapacitní invarianty mají přednost před rozsáhlou testovací infrastrukturou a vizuálními detaily. Testy ani bezpečnost nejsou důvodem posunout čtyřhodinový limit; při skluzu omezit funkce.
+
+## Výkon jako podmínka dokončení
+
+Uživatel výslovně požaduje rychlé interakce; několikasekundová odezva běžného kliknutí je nepřijatelná. Níže jsou návrhové cíle, nikoli již dosažené výsledky nebo produkční SLA.
+
+- Běžný přehled/filtr/detail: cílové p95 odezvy serveru do 500 ms na nasazeném demu pro reprezentativní sekvenční požadavky. Zvlášť uvést první požadavek, chyby a podmínky měření. Nízký počet vzorků není spolehlivá produkční statistika.
+- Prohlížeč: hlavní obsah běžné stránky cílově použitelný do 1 s na běžném připojení; na simulovaném mobilním připojení orientační LCP do 2,5 s. Měřit zvlášť od času serveru. Neblokovat klikání dlouhým výpočtem v klientovi.
+- Plánovací výpočet měřit samostatně od DB a HTTP. Na dodané datové sadě cílově pod 200 ms lokálně; ověřit také skutečné CPU omezení zvoleného hostingu. Algoritmus, který je rychlý na notebooku, nemusí vyhovět Workers Free.
+- Základ: serverové HTML, minimum JS, systémové fonty, žádné nepotřebné obrázky ani externí knihovny. Kompilované statické CSS/JS s verzovanými názvy a vhodnou cache. Data považovaná za citlivá necachovat veřejně.
+- Indexy podle dotazů (zaměstnanec+kurz, kurz+datum termínu), žádné dotazy v cyklu pro každého zaměstnance. Načíst data dávkově, vytvořit lookup mapy, doménu nepočítat znovu pro každý řádek. Stránkovat a omezit velikost odpovědí; import mimo request.
+- Automatický performance smoke: fixní reprezentativní URL, první a opakované požadavky, velikost odpovědí, chybovost, median a p95 z přiměřeného počtu vzorků. Žádný neomezený zátěžový test. Výsledky zapsat spolu s prostředím a verzí aplikace.
+- Ověřit plánovač a doménu na deterministicky rozšířené syntetické sadě (např. 10x) kvůli zjevnému kvadratickému chování, pokud to čas dovolí. Nezaměňovat tento test za potvrzení kapacity produkce.
+- Při selhání cíle najít konkrétní úzké místo (DB, výpočet, přenos, klient), opravit a znovu změřit. Pokud zůstává omezení, pravdivě ho uvést; kosmetické funkce mají nižší prioritu.
+
+## Průběžné sledování kroků a času
+
+Aktuální stav je veden v docs/STATUS.md. Každý milník aktualizuje hotovo/rozpracováno/dále, ověření, překážky a čas. Komunikace uživateli při změně kroku a nejméně jednou za minutu aktivní práce. Oddělovat naměřený čas od odhadu; nezapočítávat tichou pauzu automaticky jako osobně odpracovaný čas. Rozpočet nesmí být resetován začátkem implementace.

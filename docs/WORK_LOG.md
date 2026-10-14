@@ -47,3 +47,30 @@ Pravidlo: zaznamenáváme významná rozhodnutí, důvody, ověření a oponentu
 - Uživatel souhlasně reaguje na vysvětlení stacku a požaduje automatické kontroly zdrojů, chování a deploymentu tam, kde dávají smysl, včetně bezpečných fallbacků a rollbacků.
 - Uživatel navrhuje základní Sass bez frameworku a nástřel design systému. AI doporučuje SCSS/Dart Sass, CSS proměnné a malou sadu sémantických komponent. Dřívější návrh obyčejného CSS byl minimalizace build nástrojů, nikoli argument proti Sass.
 - Rozšířen plán o smysluplné testovací vrstvy a selhání importu/DB/plánování/deploymentu. Výslovně oddělen rollback kódu od obnovy databáze. Žádné testy aplikace ještě nebyly napsány nebo spuštěny.
+
+### Schválení plánu a Git
+
+- Uživatel schvaluje plán a výslovně autorizuje AI k dalšímu samostatnému commitování. Požaduje celkovou rekapitulaci a následující kroky.
+- Lokálně ověřeno: Git existuje, větev main sleduje origin/main, origin je https://github.com/Mooore/muni-training-evidence.git. Počáteční commit 401aacc: docs: add initial analysis and implementation proposal. Pracovní strom byl před tímto záznamem čistý.
+- Živé ověření vzdáleného repozitáře nebylo možné: gh hlásí neplatný token/chybu připojení a git ls-remote selhal na DNS github.com. Lokální napojení není důkaz vzdálené dostupnosti ani oprávnění push.
+- Schválený návrh: TypeScript, Hono, serverové HTML, SCSS/Dart Sass bez CSS frameworku, D1/SQLite, oddělená doména, cílené automatické testy a kontrola deploymentu. Reálné rezervace a autentizace mimo MVP, syntetická data zpracovávaná jako citlivá.
+
+### Výkon a sledování postupu
+
+- Uživatel přidává rychlost a výkon jako klíčový aspekt; běžný klik nesmí trvat několik sekund. Žádá průběžné hlášení aktuálního/následujícího kroku a časového stavu.
+- AI doplnila výkonové cíle a způsob měření do plánu. Jde o cíle, žádná aplikace ani naměřený výkon zatím neexistují.
+- Zavedeno docs/STATUS.md pro sledování sedmi implementačních kroků. Přesný začátek společného čtyřhodinového měření není doložen; nesmí být vymyšlen ani vynulován při implementaci.
+
+### Krok 1 — ověření po zahájení implementace (08:47)
+
+- Uživatel upřesnil začátek cca 08:00 s přestávkami a konec cca 12:20; v 08:47 zbývá cca 213 minut.
+- Opakované ověření: git ls-remote selhal na DNS, gh auth status hlásí neplatný token, git add selhal na zakázaném zápisu .git/index.lock. GitHub konektor GET repo vrátil 404; soukromý repozitář může být konektoru nepřístupný. Dostupnost repo není potvrzena.
+- Krok 1 není hotový. Potřeba oprávnění zápisu .git a funkční přístup GitHub. Návrh pracovní kopie v /tmp opuštěn, protože nesmí obcházet výslovnou restrikci .git.
+- Změny dokumentace existují v pracovním stromu, nejsou commitnuté ani pushnuté.
+
+### Pokračování se schválenými oprávněními (09:00)
+
+- Uživatel potvrzuje schválení plánu, autorizuje implementaci a průběžné commity, stanovuje konec 12:20.
+- Ověření mimo sandbox se schválením: git ls-remote origin HEAD úspěšné, gh auth status potvrzuje účet Mooore, gh repo view potvrzuje soukromý repozitář Mooore/muni-training-evidence. Předchozí síťová překážka není aktuální.
+- Plán označen za schválený; původní návrhové formulace a předpoklady uvnitř dokumentu zůstávají dohledatelné.
+- Přečten a vyhodnocen skill sites:sites; zatím nebyla vytvořena Site ani ověřen deployment.
