@@ -217,3 +217,5 @@ Pravidlo: zaznamenáváme významná rozhodnutí, důvody, ověření a oponentu
 - První spuštění zablokoval sandbox lokálních portů/logů; opakováno přes schválení oprávnění. Počáteční chyby nových testů byly nevhodné getByLabel pro select a kontrola aktivní hodnoty v úmyslně zavřených dalších filtrech; opraveny selektory/otevření, nikoli funkce aplikace. V ověřovaném chování filtrů nebyla nalezena aplikační chyba.
 - Kompletní `npm run check` (32 unit/integration testů, typecheck, build) a všech 15 lokálních browser testů úspěšných. Aplikační zdroje, dataset a veřejná revize fb600f5 se nemění; tento milník přidává testy a dokumentaci.
 - Všech 15 veřejných E2E úspěšných (25,1 s), včetně nové sady filtrů. Orientační desktop obsah 404 ms, simulovaný mobil LCP 376 ms; jednotlivé vzorky za dosavadních podmínek, nikoli nové výkonové SLA. Změna nepotřebuje deploy aplikace, protože neobsahuje běhový kód.
+
+[CI testovacího commitu 40c3d0d](https://github.com/Mooore/muni-training-evidence/actions/runs/38542018773) úspěšné: čistá instalace, 32 unit/integration testů, typy/build, migrace/seed a všech 15 browser testů.

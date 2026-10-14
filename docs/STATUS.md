@@ -55,3 +55,5 @@ Audit filtruje a stránkuje v SQL, přenáší nejvýše 30 událostí a malé a
 ## Double-check FE filtrů (hotovo 11:23)
 
 Osm nových scénářů chrání konkrétní ID/počty, všechny volby útvarů/způsobilostí/stavů, průniky, hledání, audit, celé stránkování, datum, reset, neplatné URL a mobilní Enter/reload. V ověřeném rozsahu nebyla nalezena chyba aplikace. 32 unit/integration a celkem 15 lokálních i veřejných E2E úspěšných. Běžící revize fb600f5 beze změny; nový commit obsahuje testy a dokumentaci.
+
+[CI testovacího commitu 40c3d0d](https://github.com/Mooore/muni-training-evidence/actions/runs/38542018773) úspěšné: čistá instalace, 32 unit/integration testů, typy/build, migrace/seed a všech 15 browser testů.

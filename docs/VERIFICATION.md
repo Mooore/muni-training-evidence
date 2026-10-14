@@ -136,3 +136,5 @@ Přidáno osm E2E scénářů v `tests/e2e/filters.spec.ts`, celkem nyní 15 bro
 V tomto rozsahu se aplikační chyba neprokázala. Výslovně chráněno stávající chování: stav povinnosti omezuje seznam, graf respektuje populaci před tímto filtrem; reset zachovává datum. Nejde o exhaustivní test všech kartézských kombinací všech hodnot. Kontrola 32 unit/integration testů, typů a buildu úspěšná, celá sada 15 lokálních E2E úspěšná. Běžící aplikační revize a dataset beze změny.
 
 Všech 15 veřejných E2E rovněž úspěšných (25,1 s). Orientačně desktop obsah 404 ms, simulovaný mobil LCP 376 ms za dosavadních podmínek, jednotlivé vzorky. Změna přidává testy/dokumentaci a nevyžaduje nové nasazení běhového kódu.
+
+[CI testovacího commitu 40c3d0d](https://github.com/Mooore/muni-training-evidence/actions/runs/38542018773) úspěšné: čistá instalace, 32 unit/integration testů, typy/build, migrace/seed a všech 15 browser testů.
