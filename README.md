@@ -30,6 +30,19 @@ npx tsx scripts/verify/domain.ts
 
 Na macOS E2E standardně používají instalovaný Google Chrome; v CI používají Chromium instalované Playwrightem. Pro jiný systém použít `CI=1`. Jestli server již běží lokálně, spustit `npm run test:e2e` bez `CI=1`, nebo zadat `BASE_URL=http://localhost:8787`. GitHub CI provádí také čistou migraci, seed a prohlížečové průchody. Samostatná sada `tests/e2e/filters.spec.ts` ověřuje přesná ID a počty pro útvary, způsobilosti, stavy, kombinace hledání, stránkování, reset, datum, audit i mobilní odeslání Enterem.
 
+## Izolované lokální spuštění přes Docker Compose
+
+Ověřeno na Docker Desktop 29.4.3 / Linux arm64: build včetně typů a 32 unit/integration testů, skutečný start, obsahový HTTP smoke, 25 browser scénářů a zachování svazku po znovuvytvoření kontejneru.
+
+```sh
+docker compose up --build -d
+docker compose logs -f app
+```
+
+Otevřít http://localhost:8787. Image připraví závislosti, ověří typy/testy a sestaví CSS; start aplikuje lokální migrace a minimalizovaný seed. Cloudflare účet ani originální CSV nejsou potřeba. Port je dostupný pouze na loopback hostitele. Kontejner běží jako neprivilegovaný uživatel s read-only kořenovým souborovým systémem, dočasným `/tmp` a samostatným svazkem pro lokální D1; bez připojení zdrojů, Docker socketu nebo hostitelských credentials. Omezené capabilities, procesy, paměť a CPU. Kontejner není virtuální stroj a odchozí síť není zakázaná. První build potřebuje síť pro image a npm.
+
+Zastavení: `docker compose down` (data zůstávají). Reset lokálních dat: `docker compose down --volumes` (výslovně smaže pouze svazek tohoto Compose projektu). Při startu se znovu aktivuje dodaný demo snapshot; jde o vývojové prostředí, nikoli produkční nasazení. Změny kódu se do běžícího kontejneru nepřipojují; po úpravě znovu spustit `docker compose up --build -d`. Unit testy běží při buildu image, jejich cache nemusí být zapisovatelná v běžícím read-only kontejneru. Pomocné stahování `Request.cf` metadat Miniflare je pro lokální běh vypnuté.
+
 ## Co aplikace řeší
 
 - Přehled s grafem aktuálního splnění (každá osoba jednou), konkrétními úkoly pro prošlá/chybějící školení a nejasné údaje, méně naléhavými obnovami do 60 dnů a odkazy do filtrovaného seznamu. Podrobné počty jsou k rozbalení. Hledání, útvar a konkrétní školení (celý název i kód) jsou viditelné, datum/způsobilost/stav pod dalšími filtry; aktivní omezení je automaticky otevřené.
