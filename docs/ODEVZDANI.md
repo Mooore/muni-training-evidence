@@ -3,7 +3,7 @@
 **Demo:** https://muni-training-evidence.mirinda-posp.workers.dev  
 **Zdroj:** https://github.com/Mooore/muni-training-evidence
 
-Aplikace poskytuje přehled povinných školení, filtraci osob i konkrétního druhu školení, detail dokladů, audit kvality dat a vysvětlitelný návrh přiřazení na termíny. Výchozí datum 1. 10. 2026 je výrazně označený historický snapshot. Všechna data jsou syntetická; zacházení s nimi demonstruje minimalizaci citlivých údajů.
+Aplikace poskytuje přehled povinných školení, filtraci osob i konkrétního druhu školení, detail dokladů, audit kvality dat a vysvětlitelný návrh přiřazení na termíny. Filtry lze kombinovat včetně více stavů; stavové bubliny poskytují rychlý výpis konkrétních školení. Výchozí datum 1. 10. 2026 je výrazně označený historický snapshot. Všechna data jsou syntetická; zacházení s nimi demonstruje minimalizaci citlivých údajů.
 
 Zpracováno 174 zaměstnanců, 10 kurzů a 34 termínů. Ze 2 868 zdrojových řádků absolvování bylo odstraněno 7 přesných duplicit a opakovaná hlavička; 2 860 dokladů zůstává dohledatelných. Identitu určuje ID, osoby se podle jména nebo emailu neslučují. Běhová data neobsahují rodná čísla, emaily ani volné poznámky.
 

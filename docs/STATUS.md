@@ -1,10 +1,10 @@
 # Stav realizace
 
-Poslední aktualizace: 2026-10-14 11:50 Europe/Prague.
+Poslední aktualizace: 2026-10-14 11:59 Europe/Prague.
 
 ## Čas
 
-Termín 12:20 Europe/Prague. V 09:44 bylo hotovo s rezervou 156 minut do termínu. Začátek byl podle uživatele přibližně v 08:00 s přestávkami; nejde o přesně změřený osobně odpracovaný čas. Rozpočet nebyl resetován implementací.
+Termín 12:20 Europe/Prague. Finální funkční přejímka a schválené uživatelské úpravy dokončeny 11:59 před termínem. Začátek byl podle uživatele přibližně v 08:00 s přestávkami; nejde o přesně změřený osobně odpracovaný čas. Rozpočet nebyl resetován implementací.
 
 ## Kroky
 
@@ -30,7 +30,7 @@ Termín 12:20 Europe/Prague. V 09:44 bylo hotovo s rezervou 156 minut do termín
 
 32 unit/integration testů, typecheck a build prošly. Dvacet pět prohlížečových průchodů prošlo lokálně i veřejně, včetně multiselectu stavů se školením, plynulého přejíždění mezi řádky, klávesnice, dotyku a nativního chování bez JS. GitHub CI poslední aplikační revize úspěšné včetně čisté instalace, migrací, seedu a E2E. Dřívější nezávislé lokální spuštění čistého exportu i návrat datasetu jsou doloženy ve VERIFICATION.
 
-Veřejně ověřená aplikační revize eb4ea9f, dataset 8329fc51214bfc0b, Cloudflare version 980c252b-9243-4830-9296-1d936a62c2cd. Následný dokumentační commit nemění běžící kód. Poslední HTTP smoke: audit medián/p95 127/163,1 ms; přehled 65,8/75,2 ms; návrh 68,3/144,9 ms. Vzorek zahrnuje síť a není SLA.
+Veřejně ověřená finální aplikační revize 4a8a640, dataset 8329fc51214bfc0b, Cloudflare version d1e20629-4763-4bc7-b656-f547aa79e5a0. Následný dokumentační commit nemění běžící kód. Poslední HTTP smoke: audit medián/p95 213,3/273,5 ms; přehled 147,9/669,3 ms; návrh 94,9/142,5 ms. Vzorek zahrnuje síť a není SLA. Server-Timing přehledu měl medián/p95 54/541 ms; návrhový cíl 500 ms tedy v této malé sadě nebyl splněn. Browser obsah 261 ms, simulovaný mobil LCP 400 ms.
 
 Předchozí CPU měření revize fb600f5 (nové nebylo provedeno): SQL audit první zachycený požadavek 12 ms CPU, další 2–8 ms. Zachycené špičky přehledu/plánovače 57/61 ms stále překračují 10 ms Free limit; vhodnost celé aplikace pro Free není potvrzena. Všech 32 zachycených runtime událostí bylo ok, tail neobsahuje všechny požadavky. Konkrétní billing tarif nelze s oprávněním ověřit (403); žádný tarif nebyl změněn. Podmínky měření a přejímka jsou ve VERIFICATION.
 
@@ -74,6 +74,6 @@ Implementován rychlý výpis celých názvů/kódů školení po najetí/focusu
 Implementována OR checkbox skupina a zkratka „Vše kromě Platné“ s filtrem školení, opakované state URL parametry. Bublina vlevo od stavového sloupce, odstraněn dashed border/hover fill. 32 testů, typy/build, 25 lokálních i veřejných E2E a čisté CI úspěšné. Nasazena revize eb4ea9f.
 
 
-## Závěrečné doladění a uzavření (rozpracováno 11:52)
+## Závěrečné doladění a uzavření (hotovo 11:59)
 
-Reset filtrů má vzhled sekundárního tlačítka vedle hlavní akce. Zachováno chování odkazu i resetu. Čeká finální ověření, nasazení a zaznamenání uzavření MVP.
+Reset filtrů má vzhled sekundárního tlačítka vedle hlavní akce. Zachováno chování odkazu i resetu. Vizuálně zkontrolováno rozložení, reset ověřen existujícími testy. Finální deploy/smoke, 32 unit/integration, 25 lokálních i veřejných E2E a čisté CI úspěšné. Repozitář znovu ověřen PUBLIC, main. MVP uzavřené a připravené k odevzdání; produkční a výkonové hranice výslovně zůstávají uvedené výše.
