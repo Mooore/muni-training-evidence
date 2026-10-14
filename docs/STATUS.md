@@ -1,6 +1,6 @@
 # Stav realizace
 
-Poslední aktualizace: 2026-10-14 11:40 Europe/Prague.
+Poslední aktualizace: 2026-10-14 11:50 Europe/Prague.
 
 ## Čas
 
@@ -28,9 +28,9 @@ Termín 12:20 Europe/Prague. V 09:44 bylo hotovo s rezervou 156 minut do termín
 
 ## Ověření a otevřené hranice
 
-32 unit/integration testů, typecheck a build prošly. Dvacet jedna prohlížečových průchodů prošlo lokálně i veřejně, včetně filtrů všech deseti školení, stavových bublin, klávesnice, dotyku a nativního chování bez JS. GitHub CI poslední aplikační revize úspěšné včetně čisté instalace, migrací, seedu a E2E. Dřívější nezávislé lokální spuštění čistého exportu i návrat datasetu jsou doloženy ve VERIFICATION.
+32 unit/integration testů, typecheck a build prošly. Dvacet pět prohlížečových průchodů prošlo lokálně i veřejně, včetně multiselectu stavů se školením, plynulého přejíždění mezi řádky, klávesnice, dotyku a nativního chování bez JS. GitHub CI poslední aplikační revize úspěšné včetně čisté instalace, migrací, seedu a E2E. Dřívější nezávislé lokální spuštění čistého exportu i návrat datasetu jsou doloženy ve VERIFICATION.
 
-Veřejně ověřená aplikační revize 30cbb46, dataset 8329fc51214bfc0b, Cloudflare version 84fc865b-d16d-46c4-b129-334ef4359771. Následný dokumentační commit nemění běžící kód. Poslední HTTP smoke: audit medián/p95 143,1/152,3 ms; přehled 156,5/334,7 ms; návrh 67,4/86,5 ms. Vzorek zahrnuje síť a není SLA.
+Veřejně ověřená aplikační revize eb4ea9f, dataset 8329fc51214bfc0b, Cloudflare version 980c252b-9243-4830-9296-1d936a62c2cd. Následný dokumentační commit nemění běžící kód. Poslední HTTP smoke: audit medián/p95 127/163,1 ms; přehled 65,8/75,2 ms; návrh 68,3/144,9 ms. Vzorek zahrnuje síť a není SLA.
 
 Předchozí CPU měření revize fb600f5 (nové nebylo provedeno): SQL audit první zachycený požadavek 12 ms CPU, další 2–8 ms. Zachycené špičky přehledu/plánovače 57/61 ms stále překračují 10 ms Free limit; vhodnost celé aplikace pro Free není potvrzena. Všech 32 zachycených runtime událostí bylo ok, tail neobsahuje všechny požadavky. Konkrétní billing tarif nelze s oprávněním ověřit (403); žádný tarif nebyl změněn. Podmínky měření a přejímka jsou ve VERIFICATION.
 
@@ -69,6 +69,6 @@ Implementován výběr celého názvu/kódu školení, který omezuje graf, úko
 Implementován rychlý výpis celých názvů/kódů školení po najetí/focusu/klepnutí na stav v tabulce. Respektuje konkrétní školení, nad scrollovací tabulkou, Escape/outside dismiss. 32 unit/integration testů, typy/build, 21 lokálních i veřejných E2E a čisté CI úspěšné. Nasazena revize 30cbb46; nativní kliknutí/Escape funguje i bez JS.
 
 
-## Multiselect stavů a průjezd mezi řádky (rozpracováno 11:47)
+## Multiselect stavů a průjezd mezi řádky (hotovo 11:50)
 
-Implementována OR checkbox skupina a zkratka „Vše kromě Platné“ s filtrem školení, opakované state URL parametry. Bublina vlevo od stavového sloupce, odstraněn dashed border/hover fill. 32 testů, typy/build a 25 lokálních E2E úspěšných; čeká nasazení a veřejné ověření.
+Implementována OR checkbox skupina a zkratka „Vše kromě Platné“ s filtrem školení, opakované state URL parametry. Bublina vlevo od stavového sloupce, odstraněn dashed border/hover fill. 32 testů, typy/build, 25 lokálních i veřejných E2E a čisté CI úspěšné. Nasazena revize eb4ea9f.
