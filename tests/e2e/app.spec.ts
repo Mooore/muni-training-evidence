@@ -36,7 +36,7 @@ test('data review is explained and leads to the concrete missing information',as
  await page.getByText('Co je potřeba nejprve ověřit?',{exact:true}).click();
  await expect(page.getByText('Stav „K ověření“ znamená, že z dat nelze spolehlivě rozhodnout',{exact:false})).toBeVisible();
  await page.getByRole('link',{name:'Zobrazit osoby se stavem K ověření',exact:true}).click();
- await expect(page.getByRole('combobox',{name:'Stav povinnosti',exact:true})).toHaveValue('uncertain');
+ await expect(page.getByRole('group',{name:'Stav povinnosti',exact:true}).getByRole('checkbox',{name:'K ověření',exact:true})).toBeChecked();
  await page.locator('tbody th a').first().click();
  await expect(page.getByText('Chybí útvar zaměstnance.',{exact:false}).first()).toBeVisible();
 });
@@ -49,7 +49,7 @@ test('dashboard tasks and progress lead to the correct people with visible activ
  await expect(page.getByText('Podrobné rozdělení stavů',{exact:true})).toBeVisible();
  const expired=page.getByRole('article').filter({has:page.getByRole('heading',{name:'Obnovit prošlá školení',exact:true})});
  await expect(expired).toContainText('21 osob · 39 povinností');await expired.getByRole('link',{name:'Zobrazit osoby'}).click();
- await expect(page.getByRole('combobox',{name:'Stav povinnosti',exact:true})).toBeVisible();await expect(page.getByRole('combobox',{name:'Stav povinnosti',exact:true})).toHaveValue('expired');
+ await expect(page.getByRole('group',{name:'Stav povinnosti',exact:true})).toBeVisible();await expect(page.getByRole('group',{name:'Stav povinnosti',exact:true}).getByRole('checkbox',{name:'Prošlé',exact:true})).toBeChecked();
  await expect(page.getByRole('heading',{name:'Zaměstnanci 21 Prošlé'})).toBeVisible();
  await expect(progress).toHaveAttribute('value','90');
  await page.goto('/?department=Laborato%C5%99e');

@@ -67,3 +67,8 @@ Implementován výběr celého názvu/kódu školení, který omezuje graf, úko
 ## Stavové bubliny (hotovo 11:40)
 
 Implementován rychlý výpis celých názvů/kódů školení po najetí/focusu/klepnutí na stav v tabulce. Respektuje konkrétní školení, nad scrollovací tabulkou, Escape/outside dismiss. 32 unit/integration testů, typy/build, 21 lokálních i veřejných E2E a čisté CI úspěšné. Nasazena revize 30cbb46; nativní kliknutí/Escape funguje i bez JS.
+
+
+## Multiselect stavů a průjezd mezi řádky (rozpracováno 11:47)
+
+Implementována OR checkbox skupina a zkratka „Vše kromě Platné“ s filtrem školení, opakované state URL parametry. Bublina vlevo od stavového sloupce, odstraněn dashed border/hover fill. 32 testů, typy/build a 25 lokálních E2E úspěšných; čeká nasazení a veřejné ověření.

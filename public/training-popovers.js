@@ -8,11 +8,15 @@ for (const trigger of document.querySelectorAll('[data-training-trigger]')) {
  const cancel=()=>clearTimeout(timer);
  const place=()=>{
   if(!bubble.matches(':popover-open'))return;
-  const rect=trigger.getBoundingClientRect(),box=bubble.getBoundingClientRect(),gap=8,pad=16;
+  const rect=trigger.getBoundingClientRect(),gap=8,pad=16;
   if(rect.bottom<0||rect.top>innerHeight){bubble.hidePopover();return;}
-  const left=Math.max(pad,Math.min(rect.left,innerWidth-box.width-pad));
-  const below=rect.bottom+gap;
-  const top=below+box.height<=innerHeight-pad?below:Math.max(pad,rect.top-box.height-gap);
+  // Keep the entire status column clear for vertical movement between rows.
+  const cell=trigger.closest('td').getBoundingClientRect();
+  const available=cell.left-gap-pad;
+  bubble.style.maxWidth=available>=200?`${Math.min(416,available)}px`:'';
+  const size=bubble.getBoundingClientRect();
+  const left=available>=200?cell.left-size.width-gap:Math.max(pad,Math.min(rect.left,innerWidth-size.width-pad));
+  const top=available>=200?Math.max(pad,Math.min(rect.top,innerHeight-size.height-pad)):Math.max(pad,rect.top-size.height-gap);
   bubble.style.left=`${left}px`;bubble.style.top=`${top}px`;
  };
  trainingPositions.set(bubble,place);
@@ -34,4 +38,4 @@ for (const trigger of document.querySelectorAll('[data-training-trigger]')) {
 
 const placeTrainingPopovers=()=>{for(const [bubble,place] of trainingPositions)if(bubble.matches(':popover-open'))place();};
 window.addEventListener('resize',placeTrainingPopovers);
-window.addEventListener('scroll',placeTrainingPopovers,{passive:true});
+document.addEventListener('scroll',placeTrainingPopovers,{capture:true,passive:true});

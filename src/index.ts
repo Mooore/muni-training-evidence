@@ -28,8 +28,8 @@ app.use('*',async(c,next)=>{
  c.set('date',raw);if(c.req.path!=='/quality')c.set('data',await loadDataset(c.env.DB,false));await next();
 });
 app.get('/',c=>{
- const data=c.get('data'),date=c.get('date');const scope=c.req.query('scope')??'active',state=c.req.query('state')??'',department=c.req.query('department')??'',course=c.req.query('course')??'';
- if((course&&!data.courses.some(c=>c.code===course))||!['active','all','parental','future','ended','uncertain'].includes(scope)||(state&&!Object.keys(view.labels).includes(state))||(department&&!data.employees.some(e=>e.department===department)))return c.html(view.layout('Neplatný filtr','<p>Vybraný filtr není známý.</p><a href="/">Zrušit filtry</a>',date),400);
+ const data=c.get('data'),date=c.get('date');const scope=c.req.query('scope')??'active',state=[...new Set(c.req.queries('state')??[])].filter(Boolean),department=c.req.query('department')??'',course=c.req.query('course')??'';
+ if((course&&!data.courses.some(c=>c.code===course))||!['active','all','parental','future','ended','uncertain'].includes(scope)||state.some(s=>!Object.keys(view.labels).includes(s))||(department&&!data.employees.some(e=>e.department===department)))return c.html(view.layout('Neplatný filtr','<p>Vybraný filtr není známý.</p><a href="/">Zrušit filtry</a>',date),400);
  const body=view.dashboard(data,overview(data,date),{date,scope,state,department,course,q:c.req.query('q')??'',page:Number(c.req.query('page')??1)});
  return c.html(view.layout('Přehled školení',body,date,data.meta.version));
 });

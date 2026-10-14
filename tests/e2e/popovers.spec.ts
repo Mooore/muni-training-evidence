@@ -61,3 +61,19 @@ test.describe('native fallback',()=>{
   await page.keyboard.press('Escape');await expect(bubble).toBeHidden();
  });
 });
+
+
+test('desktop bubbles leave the status column clear for continuous vertical movement and triggers have no border or hover fill',async({page})=>{
+ await page.goto('/?course=BOZP-Z');
+ const triggers=page.locator('.training-trigger');
+ const first=triggers.nth(0),second=triggers.nth(1),third=triggers.nth(2);
+ await second.scrollIntoViewIfNeeded();
+ for(const trigger of [first,second,third]){
+  await trigger.hover();
+  const id=await trigger.getAttribute('popovertarget'),bubble=page.locator('[id="'+id+'"]');await expect(bubble).toBeVisible();
+  const box=await bubble.boundingBox(),cell=await trigger.locator('xpath=ancestor::td').boundingBox();
+  expect(box!.x+box!.width).toBeLessThanOrEqual(cell!.x);
+  const style=await trigger.evaluate(el=>({border:getComputedStyle(el).borderTopWidth,background:getComputedStyle(el).backgroundColor}));
+  expect(style).toEqual({border:'0px',background:'rgba(0, 0, 0, 0)'});
+ }
+});

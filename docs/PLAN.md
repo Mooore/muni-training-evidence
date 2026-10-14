@@ -151,3 +151,10 @@ Uživatel požaduje ověřit, zda všichni mají například BOZP. Viditelný v�
 ## Rychlý výpis školení ze stavové skupiny — 2026-10-14
 
 Uživatel požaduje bublinu při najetí na stav ve sloupci Povinná školení. U každé osoby/skupiny zobrazit celé názvy a kódy odpovídajících školení, respektovat filtr kurzu. Ovládání také klávesnicí a dotykem, Escape a kliknutí mimo zavírá. Nativní popover v horní vrstvě zamezuje ořezu scrollovací tabulkou; drobný vanilla JS doplňuje hover/focus a umístění, bez nového frameworku/služby. Data i pravidla se nemění.
+
+
+## Oponentura bublin a výběr více stavů — 2026-10-14
+
+Uživatel upozornil na zakrývání dalšího řádku bublinou a žádá odstranit dashed border a hover podbarvení. Umístění vlevo od stavového sloupce zachovává průchod myši mezi řádky; na úzkém viewportu bublina nad odznakem. Zachovat keyboard/touch a Escape.
+
+Stav povinnosti má umožnit vícenásobný výběr i spolu s konkrétním školením. Checkbox skupina bez Ctrl/Cmd, OR mezi stavy, bez výběru všechny stavy. Zkratka „Vše kromě Platné“ vybere zbývající čtyři kategorie včetně aktuálně platného stavu Končí do 60 dnů. Filtr řádku znamená alespoň jednu povinnost ve vybraných stavech; pokud je zvolen kurz, testuje pouze tento kurz. Graf populace zůstává před filtrem stavu, jako doposud. Opakovaný URL parametr state zachovává původní odkazy s jednou hodnotou.

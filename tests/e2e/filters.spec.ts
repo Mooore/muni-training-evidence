@@ -7,8 +7,10 @@ import {eligibility,overview} from '../../src/domain/evidence';
 // filter implementation. Compare identities, not just a heading or one row.
 const data=JSON.parse(readFileSync('data/demo.json','utf8')) as Dataset;
 const reference=data.meta.reference;
+const stateLabels:Record<State,string>={valid:'Platné',expiring:'Končí do 60 dnů',expired:'Prošlé',missing:'Chybí',uncertain:'K ověření'};
+const selectedStates=(f:Selection):State[]=>Array.isArray(f.state)?f.state:f.state?[f.state]:[];
 const states:State[]=['valid','expiring','expired','missing','uncertain'];
-type Selection={date?:string;scope?:string;department?:string;q?:string;state?:State|'';course?:string};
+type Selection={date?:string;scope?:string;department?:string;q?:string;state?:State|''|State[];course?:string};
 function expectedIds(f:Selection){
  const date=f.date??reference,obligations=overview(data,date);
  return data.employees.filter(e=>
@@ -16,7 +18,7 @@ function expectedIds(f:Selection){
   (!f.q||`${e.name} ${e.id}`.toLocaleLowerCase('cs').includes(f.q.toLocaleLowerCase('cs')))&&
   ((f.scope??'active')==='all'||eligibility(e,date)===(f.scope??'active'))&&
   (!f.course||obligations.some(o=>o.employee.id===e.id&&o.course.code===f.course&&o.required!==false))&&
-  (!f.state||obligations.some(o=>o.employee.id===e.id&&o.required!==false&&(!f.course||o.course.code===f.course)&&o.state===f.state))
+  (!selectedStates(f).length||obligations.some(o=>o.employee.id===e.id&&o.required!==false&&(!f.course||o.course.code===f.course)&&selectedStates(f).includes(o.state)))
  ).map(e=>e.id);
 }
 async function submit(page:Page,f:Selection){
@@ -27,7 +29,7 @@ async function submit(page:Page,f:Selection){
  await form.getByRole('combobox',{name:'Školení',exact:true}).selectOption(f.course??'');
  await form.getByLabel('Referenční datum',{exact:true}).fill(f.date??reference);
  await form.getByRole('combobox',{name:'Způsobilost',exact:true}).selectOption(f.scope??'active');
- await form.getByRole('combobox',{name:'Stav povinnosti',exact:true}).selectOption(f.state??'');
+ for(const state of states)await form.getByRole('group',{name:'Stav povinnosti',exact:true}).getByRole('checkbox',{name:stateLabels[state],exact:true}).setChecked(selectedStates(f).includes(state));
  await form.getByRole('button',{name:'Filtrovat',exact:true}).click();
 }
 async function assertEmployees(page:Page,ids:string[],offset=0){
@@ -55,7 +57,7 @@ test('all obligation states filter people and do not change the selected populat
  const progress=page.getByRole('progressbar');const value=await progress.getAttribute('value'),max=await progress.getAttribute('max');
  for(const state of states){
   const f={state};await submit(page,f);await assertEmployees(page,expectedIds(f));
-  await expect(page.getByRole('combobox',{name:'Stav povinnosti',exact:true})).toHaveValue(state);
+  await expect(page.getByRole('group',{name:'Stav povinnosti',exact:true}).getByRole('checkbox',{name:stateLabels[state],exact:true})).toBeChecked();
   await expect(progress).toHaveAttribute('value',value!);await expect(progress).toHaveAttribute('max',max!);
  }
 });
@@ -93,7 +95,7 @@ test('combined filters and reference date persist through paging, detail/back an
  await expect(page.getByLabel('Zaměstnanec',{exact:true})).toHaveValue('');
  await expect(page.getByRole('combobox',{name:'Útvar',exact:true})).toHaveValue('');
  await expect(page.getByRole('combobox',{name:'Způsobilost',exact:true})).toHaveValue('active');
- await expect(page.getByRole('combobox',{name:'Stav povinnosti',exact:true})).toHaveValue('');
+ await expect(page.getByRole('group',{name:'Stav povinnosti',exact:true}).locator('input:checked')).toHaveCount(0);
  await expect(page.getByLabel('Referenční datum',{exact:true})).toHaveValue(f.date);
 });
 
@@ -152,7 +154,7 @@ test('mobile filters submit with Enter and preserve a combined selection after r
  await page.reload();await assertEmployees(page,expectedIds({...f,q}));
  await expect(page.getByRole('combobox',{name:'Útvar',exact:true})).toHaveValue(f.department);
  await expect(page.getByRole('combobox',{name:'Způsobilost',exact:true})).toHaveValue(f.scope);
- await expect(page.getByRole('combobox',{name:'Stav povinnosti',exact:true})).toHaveValue(f.state);
+ await expect(page.getByRole('group',{name:'Stav povinnosti',exact:true}).getByRole('checkbox',{name:stateLabels[f.state],exact:true})).toBeChecked();
  expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);
 });
 
@@ -193,4 +195,43 @@ test('selected BOZP persists through task links, paging and reset; states belong
  await page.getByRole('link',{name:'Zrušit filtry',exact:true}).click();
  await expect(page.getByRole('combobox',{name:'Školení',exact:true})).toHaveValue('');
  await assertEmployees(page,expectedIds({date:reference}));
+});
+
+
+test('multiple obligation states use OR within the selected course and survive paging, reload and reset',async({page})=>{
+ const f={course:'BOZP-Z',state:['expired','missing'] as State[],scope:'all',q:'E0',date:'2026-09-01'};
+ await page.goto('/');await submit(page,f);await assertEmployees(page,expectedIds(f));
+ expect(new URL(page.url()).searchParams.getAll('state')).toEqual(f.state);
+ await page.reload();await assertEmployees(page,expectedIds(f));
+ for(const state of f.state)await expect(page.getByRole('group',{name:'Stav povinnosti'}).getByRole('checkbox',{name:stateLabels[state],exact:true})).toBeChecked();
+ // A larger OR selection exercises repeated query parameters on all pages.
+ const many={...f,state:['valid','expired'] as State[]};await submit(page,many);const ids=expectedIds(many);expect(ids.length).toBeGreaterThan(20);
+ await page.getByRole('link',{name:'Další →',exact:true}).click();await assertEmployees(page,ids,20);
+ expect(new URL(page.url()).searchParams.getAll('state')).toEqual(many.state);
+ expect(new URL(page.url()).searchParams.get('course')).toBe(f.course);
+ await page.getByRole('link',{name:'Zrušit filtry',exact:true}).click();await assertEmployees(page,expectedIds({date:f.date}));
+ await expect(page.getByRole('group',{name:'Stav povinnosti'}).locator('input:checked')).toHaveCount(0);
+});
+
+test('all except Valid shortcut preserves BOZP and department, and all states clears only the state selection',async({page})=>{
+ await page.setViewportSize({width:390,height:844});
+ const f={course:'BOZP-Z',department:'Laboratoře',scope:'all',date:reference,q:'E0'};
+ await page.goto('/');await submit(page,f);
+ // Scope all keeps advanced filters open after submission.
+ await page.getByRole('link',{name:'Vše kromě Platné',exact:true}).click();
+ const selected=states.filter(s=>s!=='valid');await assertEmployees(page,expectedIds({...f,state:selected}));
+ expect(new URL(page.url()).searchParams.getAll('state')).toEqual(selected);
+ for(const [key,value] of Object.entries(f))expect(new URL(page.url()).searchParams.get(key)).toBe(value);
+ await expect(page.getByRole('checkbox',{name:'Platné',exact:true})).not.toBeChecked();
+ await page.getByRole('link',{name:'Všechny stavy',exact:true}).click();await assertEmployees(page,expectedIds(f));
+ expect(new URL(page.url()).searchParams.getAll('state')).toEqual([]);
+ expect(new URL(page.url()).searchParams.get('course')).toBe(f.course);
+});
+
+test('legacy single-state URLs work; duplicates are deduplicated and any invalid repeated value is rejected',async({page})=>{
+ await page.goto('/?course=BOZP-Z&state=expired');await assertEmployees(page,expectedIds({course:'BOZP-Z',state:'expired'}));
+ await page.goto('/?course=BOZP-Z&state=expired&state=expired&state=missing');
+ await assertEmployees(page,expectedIds({course:'BOZP-Z',state:['expired','missing']}));
+ await expect(page.getByRole('group',{name:'Stav povinnosti'}).locator('input:checked')).toHaveCount(2);
+ const response=await page.goto('/?state=expired&state=invalid');expect(response?.status()).toBe(400);
 });

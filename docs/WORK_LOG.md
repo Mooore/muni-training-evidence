@@ -242,3 +242,11 @@ Pravidlo: zaznamenáváme významná rozhodnutí, důvody, ověření a oponentu
 
 - Finální lokální sada 21 E2E a veřejná sada 21 E2E úspěšné. Nasazena revize 30cbb46, Cloudflare version 84fc865b-d16d-46c4-b129-334ef4359771, dataset stejný. Deploy gate/smoke i čisté CI 38543786053 success.
 - Veřejný přehled HTTP median/p95 156,5/334,7 ms, HTML 32 787 B před kompresí (seznamy jsou již v HTML); browser transfer přibližně 5,1 kB. Desktop obsah 380 ms, simulovaný mobil LCP 388 ms. Malé vzorky bez SLA, nové CPU neměřeno. Vše dokončeno 11:40, aktualizována dokumentace, data a pravidla zůstávají stejná.
+
+
+## 2026-10-14 — oprava průjezdu myší a multiselect stavů (11:41–11:47)
+
+- Uživatelova skutečná oponentura: bublina pod odznakem zakrývala další řádek a bránila plynulému přejíždění. Dashed border a hover background nebyly žádoucí. Popup nyní umísťujeme vlevo od celé stavové buňky (s přizpůsobením šířky); na úzké obrazovce nad odznak. Odstraněn border i hover podbarvení, zachován klávesnicový focus. Sleduje se i posun vnořené tabulky.
+- Výslovný požadavek multiselectu stavů v kombinaci se školením řeší checkbox skupina. OR mezi stavy, bez výběru žádné stavové omezení; „Vše kromě Platné“ zvolí čtyři jiné kategorie a „Všechny stavy“ odstraní pouze stavový výběr. Tyto zkratky zachovávají aktuálně aplikované ostatní filtry. U více kurzů řádek vyhoví alespoň jednou povinností, u vybraného kurzu pouze tímto kurzem. Expiring je v kategorii Končí do 60 dnů, přesto aktuálně platné.
+- URL používá opakované state parametry. Všechny hodnoty validované, duplicity deduplikované, původní single-state odkazy fungují. Generování odkazů zachovává všechny hodnoty při stránkování; formulář resetuje page.
+- 32 unit/integration testů, typy/build a všech 25 lokálních E2E úspěšných. Čtyři nové scénáře kontrolují OR proti přesným ID, školení a další filtry, stránkování/reload/reset, mobilní zkratky, staré URL/duplicitní/neplatné hodnoty, přechody mezi třemi řádky a geometricky volný stavový sloupec, nulový border i transparentní hover. Čeká commit a veřejné ověření.
