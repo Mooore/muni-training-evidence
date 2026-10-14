@@ -1,6 +1,6 @@
 # Stav realizace
 
-Poslední aktualizace: 2026-10-14 10:34 Europe/Prague.
+Poslední aktualizace: 2026-10-14 10:47 Europe/Prague.
 
 ## Čas
 
@@ -43,3 +43,7 @@ Nasazená a ověřená úprava srozumitelnosti: celé názvy školení, konkrét
 ## Schválené zjednodušení přehledu (hotovo 10:34)
 
 Nasazen graf splnění s unikátními osobami (90/153), konkrétní úkoly, rozbalovací podrobnosti a pokročilé filtry, stručnější úvod plánovače. 29 testů, build, 5 lokálních i veřejných E2E a CI úspěšné. Úkoly zachovávají výběr při přechodu do seznamu; upravené pokročilé filtry se automaticky otevřou. Přiřazovací algoritmus se nemění.
+
+## Oprava caps-lock křestních jmen (10:47)
+
+Lokálně ověřena auditovaná oprava šesti běžných křestních jmen včetně LUCIE → Lucie. Dataset 8329fc51214bfc0b, šest dodatečných oprav, stejná ID a všechny doménové výsledky. 30 testů, build a 6 lokálních E2E úspěšné. Veřejná verze zatím používá předchozí dataset; následuje záloha D1, staging/aktivace a deploy.

@@ -54,7 +54,7 @@ npm run import -- /cesta/k/originalnim/csv
 npm run seed:local
 ```
 
-Import nejprve validuje strukturu všech souborů v paměti. Chybná hlavička, strukturálně neplatné CSV nebo duplicitní identita zaměstnance import zastaví. Problémové doklady a termíny zůstávají označené; nejsou důvěryhodným důkazem ani plánovací kapacitou. Alias je explicitní, bez fuzzy matching. Konfliktní verze ID dokladu se nepřepisují. Přesné duplicity se rozpoznávají před minimalizací.
+Import nejprve validuje strukturu všech souborů v paměti. Chybná hlavička, strukturálně neplatné CSV nebo duplicitní identita zaměstnance import zastaví. Problémové doklady a termíny zůstávají označené; nejsou důvěryhodným důkazem ani plánovací kapacitou. Alias je explicitní, bez fuzzy matching. U šesti ověřených běžných křestních jmen psaných caps lockem se používá výslovný seznam oprav (např. LUCIE → Lucie, ALEŠ → Aleš); každá oprava má audit podle ID a řádku. Neprovádí se obecný title-case osobních jmen ani slučování podle sjednoceného zápisu. Konfliktní verze ID dokladu se nepřepisují. Přesné duplicity se rozpoznávají před minimalizací.
 
 Generuje `data/demo.json`, `seed.sql`, `activate.sql` a `manifest.json`. Seed vytváří nový neměnný dataset. **Aktivace je oddělená a kontroluje úplnost všech tabulek**; přerušený staging neaktivuje částečný dataset. Do vzdálené databáze se nic automaticky neimportuje. Před použitím jiných dat znovu posoudit minimalizaci a veřejný přístup; toto není bezpečný veřejný import libovolných skutečných HR dat.
 

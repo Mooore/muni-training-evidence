@@ -59,3 +59,11 @@ test('dashboard tasks and progress lead to the correct people with visible activ
  await page.goto('/?q=nenalezeno-xyz');await expect(page.getByRole('progressbar')).toHaveCount(0);
  await expect(page.getByText('Pro prázdný výběr nelze určit úkoly.',{exact:false})).toBeVisible();
 });
+
+test('reimported name repair is visible and its source is auditable',async({page})=>{
+ await page.goto('/employees/E0020');
+ await expect(page.getByRole('heading',{level:1,name:/^Lucie /})).toBeVisible();
+ await page.goto('/quality?q=E0020&level=repair');
+ await expect(page.locator('tbody')).toContainText('Opraven zápis křestního jména');
+ await expect(page.locator('tbody')).toContainText('zamestnanci');
+});

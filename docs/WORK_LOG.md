@@ -170,3 +170,12 @@ Pravidlo: zaznamenáváme významná rozhodnutí, důvody, ověření a oponentu
 - Všech 5 veřejných E2E a GitHub Actions run 38535706839 completed/success. Ověřeny skutečné hodnoty grafu, odkazy úkolů, zachování výběru, viditelnost aktivních filtrů i rozbalení podrobné priority plánovače.
 - Přehled HTTP medián/p95 96,6/237,9 ms (server p95 90 ms), plán 88,5/703,6 ms (server p95 25 ms). Desktop obsah 298 ms, simulovaný mobil LCP 380 ms. Malé vzorky a podmínky popsány ve VERIFICATION; nezaměňují se síť a CPU/server.
 - Závěrečná dokumentace zachycuje schválení a ověření; běžící revize zůstává 4266f2b.
+
+## 2026-10-14 — oprava zápisu křestních jmen (10:38–10:47)
+
+- Uživatel upozornil na zjevný caps-lock zápis „LUCIE“ místo „Lucie“. Kontrola čtyř původních syntetických exportů zjistila šest takových běžných křestních jmen v zaměstnancích (E0020, E0065, E0079, E0087, E0142, E0162), žádné all-caps příjmení.
+- AI volba v rámci opravy stejného problému: explicitní seznam šesti ověřených podob LUCIE/HANA/MARTINA/ZUZANA/JANA/ALEŠ. Nejde o uživatelovo výslovné schválení obecného automatického přepisování všech jmen; takové pravidlo se nezavedlo. Příjmení, složená a neznámá jména se netitle-casují.
+- Oprava probíhá při importu, každá z šesti změn má audit (soubor, logický řádek, ID, důvod), bez jmenných hodnot v auditním textu. Identita výhradně podle ID. Test ověřuje i stejné výsledné jméno dvou různých ID, diakritiku a zachování nestandardního zápisu.
+- Nový dataset 8329fc51214bfc0b, stále 174 osob, 10 školení, 2 860 dokladů, 34 termínů; audit 4 433 událostí (přidáno 6 oprav). Original CSV zůstávají beze změn mimo Git.
+- Porovnání před/po: změněno přesně šest name hodnot, ostatní atributy zaměstnanců, katalog, doklady a termíny identické. Předchozí audit beze změny po odfiltrování šesti nových oprav. Přiřazení na třech datech přesně shodná; souhrn nadále 90/153 splněno, 63 řešit/ověřit.
+- Lokální seed a aktivace nového datasetu proběhly; 30 testů, typecheck, build a 6 E2E prošly včetně zobrazení Lucie na E0020 a dohledání opravy v auditu. Veřejná záloha, aktivace a deployment ještě čekají.

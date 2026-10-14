@@ -137,3 +137,7 @@ Uživatel upozornil na nesrozumitelné zkratky a vysvětlení návrhu, nejasný 
 ## Schválené zjednodušení přehledu — 2026-10-14
 
 Uživatel schválil implementaci: nad seznamem graf aktuálního splnění s unikátními osobami, tři úkoly (prošlé / chybějící / ověřit údaje) a méně naléhavé obnovy do 60 dnů. Pět podrobných stavových počtů k rozbalení. Ve filtrech viditelné hledání a útvar, ostatní pod „Další filtry“ s automatickým otevřením při aktivním omezení. V návrhu krátké shrnutí a podrobný algoritmus k rozbalení. Pořadí samotného plánovače se tím nemění.
+
+## Oprava formátu křestních jmen — 2026-10-14
+
+Po uživatelově upozornění na caps-lock „LUCIE“ je import doplněn explicitním seznamem šesti ověřených běžných křestních jmen se stejnou chybou. Opravy jsou auditované podle ID a zdrojového řádku. Nezavádí se globální title-case jmen, fuzzy opravy osob ani slučování podle výsledného jména. Originály se nepřepisují; vzniká nový neměnný minimalizovaný dataset.

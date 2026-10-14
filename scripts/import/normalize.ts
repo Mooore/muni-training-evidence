@@ -16,6 +16,8 @@ export function readCsv(bytes:Buffer,file:File):Row[] {
 }
 const departments:Record<string,string>={'Studijní':'Studijní oddělení','Studijni oddeleni':'Studijní oddělení','Sprava budov':'Správa budov','SPRÁVA BUDOV':'Správa budov','správa budov':'Správa budov','Laboratore':'Laboratoře','Personalni oddeleni':'Personální oddělení','VEDENÍ':'Vedení'};
 const codes:Record<string,string>={'POZ_OCH':'POZ-OCH','POZ OCH':'POZ-OCH','BOZP_Z':'BOZP-Z','BOZP Z':'BOZP-Z'};
+// Only inspected, ordinary given names: do not title-case arbitrary personal names.
+const givenNameAliases=new Map([['LUCIE','Lucie'],['HANA','Hana'],['MARTINA','Martina'],['ZUZANA','Zuzana'],['JANA','Jana'],['ALEŠ','Aleš']]);
 const integer=(value:string):number|null=>/^\d+$/.test(value.trim()) && Number.isSafeInteger(Number(value))?Number(value):null;
 export function normalize(input:Record<File,Row[]>,importedAt=new Date().toISOString()):Dataset {
  const audit:Audit[]=[];
@@ -26,6 +28,8 @@ export function normalize(input:Record<File,Row[]>,importedAt=new Date().toISOSt
  };
  const employees:Employee[]=input.zamestnanci.map((r,i)=>{
   const row=i+2,id=r.id_zamestnance.trim(),issues:string[]=[];
+  const given=r.jmeno.trim(),givenName=givenNameAliases.get(given)??given;
+  if(givenName!==given) note('zamestnanci',row,id,'repair','Opraven zápis křestního jména velkými písmeny podle explicitního seznamu běžných jmen.');
   const department=departments[r.utvar.trim()]??r.utvar.trim();if(department!==r.utvar) note('zamestnanci',row,id,'repair','Normalizován útvar explicitním aliasem.');
   if(!department) note('zamestnanci',row,id,'warning','Chybí útvar; útvarové povinnosti jsou nejisté.');
   const start=date(r.datum_nastupu,'zamestnanci',row,id,issues,'datum nástupu'),end=date(r.datum_ukonceni,'zamestnanci',row,id,issues,'datum ukončení',true);
@@ -35,7 +39,7 @@ export function normalize(input:Record<File,Row[]>,importedAt=new Date().toISOSt
   if(r.stav==='aktivní' && end && end<'2026-10-01') issues.push('Aktivní stav je v rozporu s ukončením před exportem.');
   if(r.stav==='ukončen' && end && end>'2026-10-01') issues.push('Ukončený stav je v rozporu s budoucím ukončením k exportu.');
   for(const reason of issues) note('zamestnanci',row,id,'warning',reason);
-  return {id,name:`${r.jmeno.trim()} ${r.prijmeni.trim()}`,department,position:r.pozice.trim(),start,end,status:r.stav,issues};
+  return {id,name:`${givenName} ${r.prijmeni.trim()}`,department,position:r.pozice.trim(),start,end,status:r.stav,issues};
  });
  if(employees.some(e=>!e.id) || new Set(employees.map(e=>e.id)).size!==employees.length) throw new Error('Chybějící nebo duplicitní ID zaměstnance; import zastaven.');
  const courses:Course[]=input.katalog_skoleni.map((r,i)=>{const id=code(r.kod,'katalog_skoleni',i+2,r.kod),issues:string[]=[];let months=r.platnost_mesicu==='2 roky'?24:r.platnost_mesicu.trim()===''?null:integer(r.platnost_mesicu);

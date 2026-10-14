@@ -11,3 +11,12 @@ test('duplicate employee ID aborts; identities never merged by name',()=>{const 
 
 test('Windows-1250 source is decoded explicitly; malformed UTF-8 fails',()=>{const header=Buffer.from('id_zaznamu;id_zamestnance;kod_skoleni;datum_absolvovani;platnost_do;poskytovatel\nZ1;E1;A;2024-01-01;;');const bytes=Buffer.concat([header,Buffer.from([0x8a,0x6b,0x6f,0x6c,0x65,0x6e,0xed]),Buffer.from('\n')]);expect(readCsv(bytes,'absolvovana_skoleni')[0].poskytovatel).toBe('Školení');expect(()=>readCsv(Buffer.from([0xff]),'zamestnanci')).toThrow('kódování');});
 test('negative optional validity, employment contradiction and bad session numbers stay audited',()=>{const f=fixture();f.katalog_skoleni[0].povinne_pro='NEPOVINNE';f.katalog_skoleni[0].platnost_mesicu='-1';f.zamestnanci[0].datum_ukonceni='2025-01-01';f.terminy_skoleni=[{id_terminu:'T1',kod_skoleni:'BOZP-Z',datum:'2026-10-05',cas:'12:00-09:00',misto:'Test',kapacita:'10x',obsazeno:'-1',stav:'plánováno'}];const d=normalize(f);expect(d.courses[0].issues.length).toBeGreaterThan(0);expect(d.employees[0].issues.length).toBeGreaterThan(0);expect(d.sessions[0].issues).toContain('Neplatná kapacita nebo obsazenost.');expect(d.sessions[0].issues).toContain('Neplatný časový interval.');expect(d.audit.filter(a=>a.level==='warning').length).toBeGreaterThan(2);});
+
+test('given-name repair is audited without changing identity or arbitrary name spelling',()=>{
+ const f=fixture();f.zamestnanci[0].jmeno='  LUCIE';f.zamestnanci[0].prijmeni='de la Cruz';
+ f.zamestnanci.push({...f.zamestnanci[0],id_zamestnance:'E2',jmeno:'Lucie'},{...f.zamestnanci[0],id_zamestnance:'E3',jmeno:'ALEŠ',prijmeni:'McDonald'},{...f.zamestnanci[0],id_zamestnance:'E4',jmeno:'ANNA-MARIE'});
+ const d=normalize(f);expect(d.employees.map(e=>[e.id,e.name])).toEqual([['E1','Lucie de la Cruz'],['E2','Lucie de la Cruz'],['E3','Aleš McDonald'],['E4','ANNA-MARIE de la Cruz']]);
+ const repairs=d.audit.filter(a=>a.reason.includes('křestního jména'));
+ expect(repairs.map(a=>[a.file,a.row,a.id,a.level])).toEqual([['zamestnanci',2,'E1','repair'],['zamestnanci',4,'E3','repair']]);
+ expect(JSON.stringify(repairs)).not.toContain('LUCIE');expect(d.completions[0].employeeId).toBe('E1');
+});
